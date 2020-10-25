@@ -1,0 +1,41 @@
+# 程序配置
+app:
+  jwtSecret: e7b3e907df88943aff31c0007feecdb6
+
+# 服务配置
+server:
+  # 开发模式 debug or release
+  runMode: debug
+  # 超时时间/单位s
+  readTimeout: 60
+  writeTimeout: 60
+  # 端口
+  httpPort: 9999
+  # pingServer函数请求的API服务器的ip:port
+  url: http://127.0.0.1:9999
+  # pingServer函数try的次数
+  maxPingCount: 10
+
+# 日志配置
+logger:
+  # 日志记录模式 panic,fatal,error,warn,info,debug
+  loggerLevel: debug
+  # 日志记录文件位置，留空则不记录到文件
+  loggerFile: log/go-one-piece.log
+  # 日志记录文件最大保存时间(小时)
+  loggerFileMaxAge: 168
+  # 日志记录文件切割时间间隔(小时)
+  loggerFileRotationTime: 24
+
+# mysql配置
+# 配置内容参考: https://gorm.io/zh_CN/docs/connecting_to_the_database.html
+mysql:
+  # 连接驱动
+  url: root:123456@tcp(127.0.0.1:3306)/db_go_one_piece?charset=utf8mb4&parseTime=True&loc=Local
+
+# Redis配置
+redis:
+  # 连接地址
+  addr: 127.0.0.1:6379
+  # 密码,默认为空
+  password:
