@@ -2,8 +2,8 @@ package conf
 
 import (
 	"github.com/fsnotify/fsnotify"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
-	"log"
 	"time"
 )
 
@@ -44,32 +44,59 @@ type redis struct {
 	Password string `yaml:"password"`
 }
 
-var Config *config
+var (
+	Config *config
+	v      *viper.Viper
+)
 
 const defaultConfigFile = "config.yaml"
 
 // 初始化程序配置
 func Setup() {
-	v := viper.New()
+	v = viper.New()
 	v.SetConfigFile(defaultConfigFile)
 	if err := v.ReadInConfig(); err != nil {
-		log.Panicf("读取%s异常: %s", defaultConfigFile, err)
+		panic(err)
 	}
-	v.WatchConfig()
-	v.OnConfigChange(func(e fsnotify.Event) {
-		log.Printf("热加载%s", e.Name)
-		loadConfig(v)
-	})
-	loadConfig(v)
+	setConfig()
 }
 
-func loadConfig(v *viper.Viper) {
+func OnConfigChange(run func()) {
+	v.OnConfigChange(func(in fsnotify.Event) { run() })
+	v.WatchConfig()
+}
+
+func setConfig() {
 	Config = &config{}
 	if err := v.Unmarshal(&Config); err != nil {
-		log.Fatalf("解析%s异常: %s", defaultConfigFile, err)
+		logging().Errorln(defaultConfigFile, err)
 	}
 	Config.Server.ReadTimeout *= time.Second
 	Config.Server.WriteTimeout *= time.Second
 	Config.Logger.LoggerFileMaxAge *= time.Hour
 	Config.Logger.LoggerFileRotationTime *= time.Hour
+}
+
+func Reset() {
+	setConfig()
+}
+
+var levels = map[string]logrus.Level{
+	"panic": logrus.PanicLevel,
+	"fatal": logrus.FatalLevel,
+	"error": logrus.ErrorLevel,
+	"warn":  logrus.WarnLevel,
+	"info":  logrus.InfoLevel,
+	"debug": logrus.DebugLevel,
+}
+
+func logging() *logrus.Entry {
+	if level, ok := levels[Config.Logger.LoggerLevel]; ok {
+		logrus.SetLevel(level)
+	} else {
+		logrus.SetLevel(logrus.DebugLevel)
+	}
+	return logrus.WithFields(logrus.Fields{
+		"env": Config.Server.RunMode,
+	})
 }
