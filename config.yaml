@@ -4,7 +4,7 @@ app:
 
 # 服务配置
 server:
-  # 开发模式 debug or release
+  # 开发模式 debug,release,test
   runMode: debug
   # 超时时间/单位s
   readTimeout: 60
@@ -21,7 +21,7 @@ logger:
   # 日志记录模式 panic,fatal,error,warn,info,debug
   loggerLevel: debug
   # 日志记录文件位置，留空则不记录到文件
-  loggerFile: log/go-one-piece.log
+  loggerFile: log/log.log
   # 日志记录文件最大保存时间(小时)
   loggerFileMaxAge: 168
   # 日志记录文件切割时间间隔(小时)
