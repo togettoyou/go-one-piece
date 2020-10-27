@@ -5,7 +5,6 @@ import (
 	"go-one-piece/router/middleware"
 )
 
-//初始化路由信息
 func InitRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(middleware.Logger())

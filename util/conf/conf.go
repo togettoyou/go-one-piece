@@ -52,7 +52,7 @@ var (
 
 const defaultConfigFile = "config.yaml"
 
-// 初始化程序配置
+// 初始化读取配置文件
 func Setup() {
 	v = viper.New()
 	v.SetConfigFile(defaultConfigFile)
@@ -62,11 +62,13 @@ func Setup() {
 	setConfig()
 }
 
+// 配置文件热加载回调
 func OnConfigChange(run func()) {
 	v.OnConfigChange(func(in fsnotify.Event) { run() })
 	v.WatchConfig()
 }
 
+// 构造配置文件到Config结构体上
 func setConfig() {
 	Config = &config{}
 	if err := v.Unmarshal(&Config); err != nil {

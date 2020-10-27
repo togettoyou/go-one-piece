@@ -7,7 +7,6 @@ import (
 	"go-one-piece/util"
 	"go-one-piece/util/conf"
 	"go-one-piece/util/logger"
-	"go.uber.org/zap"
 	"net/http"
 	"time"
 )
@@ -25,7 +24,6 @@ func main() {
 		select {
 		case <-reload:
 			util.Reset()
-			zap.L().Info("OnConfigChange")
 		}
 	}
 }

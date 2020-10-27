@@ -4,12 +4,15 @@ import (
 	"github.com/gin-gonic/gin"
 	"go-one-piece/util/conf"
 	"go-one-piece/util/logger"
+	"go.uber.org/zap"
 )
 
+// 重设配置
 func Reset() {
 	conf.Reset()
 	logger.Reset()
 	resetGinMode()
+	zap.L().Info("重载配置")
 }
 
 const (

@@ -18,12 +18,12 @@ server:
 
 # 日志配置
 logConfig:
-  # 日志记录模式 panic,fatal,error,warn,info,debug
+  # 日志记录模式 fatal,panic,dpanic,error,warn,info,debug
   level: info
   # 日志记录文件位置，留空则不记录到文件
   filename: log/log.log
   # MaxSize 是日志文件在获取之前的最大大小（以兆字节为单位）默认为 100 MB
-  maxSize: 1
+  maxSize: 100
   # MaxAge 是保留旧日志文件的最大天数
   maxAge: 7
   # MaxBackups 是要保留的最大旧日志文件数
