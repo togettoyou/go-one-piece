@@ -6,14 +6,15 @@ import (
 	"go-one-piece/router"
 	"go-one-piece/util"
 	"go-one-piece/util/conf"
-	"go-one-piece/util/logging"
+	"go-one-piece/util/logger"
+	"go.uber.org/zap"
 	"net/http"
 	"time"
 )
 
 func init() {
 	conf.Setup()
-	logging.Setup()
+	logger.Setup()
 }
 
 func main() {
@@ -24,7 +25,7 @@ func main() {
 		select {
 		case <-reload:
 			util.Reset()
-			logging.Get().Infoln("OnConfigChange")
+			zap.L().Info("OnConfigChange")
 		}
 	}
 }

@@ -2,17 +2,17 @@ package conf
 
 import (
 	"github.com/fsnotify/fsnotify"
-	"github.com/sirupsen/logrus"
 	"github.com/spf13/viper"
+	"go.uber.org/zap"
 	"time"
 )
 
 type config struct {
-	App    app    `yaml:"app"`
-	Server server `yaml:"server"`
-	Logger logger `yaml:"logger"`
-	Mysql  mysql  `yaml:"mysql"`
-	Redis  redis  `yaml:"redis"`
+	App       app       `yaml:"app"`
+	Server    server    `yaml:"server"`
+	LogConfig logConfig `yaml:"logConfig"`
+	Mysql     mysql     `yaml:"mysql"`
+	Redis     redis     `yaml:"redis"`
 }
 
 type app struct {
@@ -28,11 +28,12 @@ type server struct {
 	MaxPingCount int           `yaml:"maxPingCount"`
 }
 
-type logger struct {
-	LoggerLevel            string        `yaml:"loggerLevel"`
-	LoggerFile             string        `yaml:"loggerFile"`
-	LoggerFileMaxAge       time.Duration `yaml:"loggerFileMaxAge"`
-	LoggerFileRotationTime time.Duration `yaml:"loggerFileRotationTime"`
+type logConfig struct {
+	Level      string `yaml:"level"`
+	Filename   string `yaml:"filename"`
+	MaxSize    int    `yaml:"maxSize"`
+	MaxAge     int    `yaml:"maxAge"`
+	MaxBackups int    `yaml:"maxBackups"`
 }
 
 type mysql struct {
@@ -69,34 +70,12 @@ func OnConfigChange(run func()) {
 func setConfig() {
 	Config = &config{}
 	if err := v.Unmarshal(&Config); err != nil {
-		logging().Errorln(defaultConfigFile, err)
+		zap.L().Error(err.Error())
 	}
 	Config.Server.ReadTimeout *= time.Second
 	Config.Server.WriteTimeout *= time.Second
-	Config.Logger.LoggerFileMaxAge *= time.Hour
-	Config.Logger.LoggerFileRotationTime *= time.Hour
 }
 
 func Reset() {
 	setConfig()
-}
-
-var levels = map[string]logrus.Level{
-	"panic": logrus.PanicLevel,
-	"fatal": logrus.FatalLevel,
-	"error": logrus.ErrorLevel,
-	"warn":  logrus.WarnLevel,
-	"info":  logrus.InfoLevel,
-	"debug": logrus.DebugLevel,
-}
-
-func logging() *logrus.Entry {
-	if level, ok := levels[Config.Logger.LoggerLevel]; ok {
-		logrus.SetLevel(level)
-	} else {
-		logrus.SetLevel(logrus.DebugLevel)
-	}
-	return logrus.WithFields(logrus.Fields{
-		"env": Config.Server.RunMode,
-	})
 }

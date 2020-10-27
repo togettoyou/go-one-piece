@@ -3,12 +3,12 @@ package util
 import (
 	"github.com/gin-gonic/gin"
 	"go-one-piece/util/conf"
-	"go-one-piece/util/logging"
+	"go-one-piece/util/logger"
 )
 
 func Reset() {
 	conf.Reset()
-	logging.Reset()
+	logger.Reset()
 	resetGinMode()
 }
 
