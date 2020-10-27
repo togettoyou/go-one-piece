@@ -30,7 +30,7 @@ type server struct {
 
 type logConfig struct {
 	Level      string `yaml:"level"`
-	Filename   string `yaml:"filename"`
+	IsFile     bool   `yaml:"isFile"`
 	MaxSize    int    `yaml:"maxSize"`
 	MaxAge     int    `yaml:"maxAge"`
 	MaxBackups int    `yaml:"maxBackups"`
@@ -46,7 +46,7 @@ type redis struct {
 }
 
 var (
-	Config *config
+	Config = new(config)
 	v      *viper.Viper
 )
 
@@ -70,7 +70,6 @@ func OnConfigChange(run func()) {
 
 // 构造配置文件到Config结构体上
 func setConfig() {
-	Config = &config{}
 	if err := v.Unmarshal(&Config); err != nil {
 		zap.L().Error(err.Error())
 	}

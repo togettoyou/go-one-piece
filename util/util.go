@@ -12,24 +12,19 @@ func Reset() {
 	conf.Reset()
 	logger.Reset()
 	resetGinMode()
-	zap.L().Info("重载配置")
+	zap.S().Info("config change", conf.Config)
 }
 
-const (
-	DebugMode   = "debug"
-	ReleaseMode = "release"
-	TestMode    = "test"
-)
+var modes = map[string]string{
+	"debug":   "debug",
+	"release": "release",
+	"test":    "test",
+}
 
 func resetGinMode() {
-	switch conf.Config.Server.RunMode {
-	case DebugMode, "":
-		gin.SetMode(DebugMode)
-	case ReleaseMode:
-		gin.SetMode(ReleaseMode)
-	case TestMode:
-		gin.SetMode(TestMode)
-	default:
-		gin.SetMode(DebugMode)
+	if mode, ok := modes[conf.Config.Server.RunMode]; ok {
+		gin.SetMode(mode)
+	} else {
+		gin.SetMode("debug")
 	}
 }
