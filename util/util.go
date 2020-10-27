@@ -15,10 +15,16 @@ func Reset() {
 	zap.S().Info("config change", conf.Config)
 }
 
+const (
+	DebugMode   string = "debug"
+	ReleaseMode string = "release"
+	TestMode    string = "test"
+)
+
 var modes = map[string]string{
-	"debug":   "debug",
-	"release": "release",
-	"test":    "test",
+	"debug":   DebugMode,
+	"release": ReleaseMode,
+	"test":    TestMode,
 }
 
 func resetGinMode() {

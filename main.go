@@ -7,6 +7,7 @@ import (
 	"go-one-piece/util"
 	"go-one-piece/util/conf"
 	"go-one-piece/util/logger"
+	"go-one-piece/util/validator"
 	"net/http"
 	"time"
 )
@@ -14,6 +15,7 @@ import (
 func init() {
 	conf.Setup()
 	logger.Setup()
+	validator.Setup()
 }
 
 func main() {
