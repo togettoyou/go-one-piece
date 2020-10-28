@@ -37,7 +37,7 @@ type logConfig struct {
 }
 
 type mysql struct {
-	Url string `yaml:"url"`
+	Dsn string `yaml:"dsn"`
 }
 
 type redis struct {

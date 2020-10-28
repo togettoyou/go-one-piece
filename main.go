@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go-one-server/model"
 	"go-one-server/router"
 	"go-one-server/util"
 	"go-one-server/util/conf"
@@ -16,6 +17,7 @@ func init() {
 	conf.Setup()
 	logger.Setup()
 	validator.Setup()
+	model.Setup()
 }
 
 // @title go-one-server
