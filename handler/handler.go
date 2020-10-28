@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/validator/v10"
-	"go-one-piece/util/errno"
-	myValidator "go-one-piece/util/validator"
+	"go-one-server/util/errno"
+	myValidator "go-one-server/util/validator"
 	"net/http"
 )
 

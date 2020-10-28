@@ -3,11 +3,11 @@ package main
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
-	"go-one-piece/router"
-	"go-one-piece/util"
-	"go-one-piece/util/conf"
-	"go-one-piece/util/logger"
-	"go-one-piece/util/validator"
+	"go-one-server/router"
+	"go-one-server/util"
+	"go-one-server/util/conf"
+	"go-one-server/util/logger"
+	"go-one-server/util/validator"
 	"net/http"
 	"time"
 )
@@ -18,7 +18,7 @@ func init() {
 	validator.Setup()
 }
 
-// @title go-one-piece
+// @title go-one-server
 // @version 1.0
 // @description 基于Gin进行快速构建RESTful API 服务的脚手架
 // @securityDefinitions.apikey ApiKeyAuth

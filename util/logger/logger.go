@@ -2,7 +2,7 @@ package logger
 
 import (
 	"github.com/natefinch/lumberjack"
-	"go-one-piece/util/conf"
+	"go-one-server/util/conf"
 	"go.uber.org/zap"
 	"go.uber.org/zap/zapcore"
 	"os"

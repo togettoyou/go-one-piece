@@ -1,4 +1,4 @@
-module go-one-piece
+module go-one-server
 
 go 1.14
 

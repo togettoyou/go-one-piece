@@ -2,8 +2,8 @@ package util
 
 import (
 	"github.com/gin-gonic/gin"
-	"go-one-piece/util/conf"
-	"go-one-piece/util/logger"
+	"go-one-server/util/conf"
+	"go-one-server/util/logger"
 	"go.uber.org/zap"
 )
 

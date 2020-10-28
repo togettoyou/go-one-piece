@@ -2,7 +2,7 @@ package examples
 
 import (
 	"github.com/gin-gonic/gin"
-	. "go-one-piece/handler"
+	. "go-one-server/handler"
 )
 
 // @Tags examples

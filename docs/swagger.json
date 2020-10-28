@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "基于Gin进行快速构建RESTful API 服务的脚手架",
-        "title": "go-one-piece",
+        "title": "go-one-server",
         "contact": {},
         "license": {},
         "version": "1.0"

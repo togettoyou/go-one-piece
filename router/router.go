@@ -6,9 +6,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
-	_ "go-one-piece/docs"
-	"go-one-piece/handler/v1/examples"
-	"go-one-piece/router/middleware"
+	_ "go-one-server/docs"
+	"go-one-server/handler/v1/examples"
+	"go-one-server/router/middleware"
 )
 
 func InitRouter() *gin.Engine {

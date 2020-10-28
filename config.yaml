@@ -33,7 +33,7 @@ logConfig:
 # 配置内容参考: https://gorm.io/zh_CN/docs/connecting_to_the_database.html
 mysql:
   # 连接驱动
-  url: root:123456@tcp(127.0.0.1:3306)/db_go_one_piece?charset=utf8mb4&parseTime=True&loc=Local
+  url: root:123456@tcp(127.0.0.1:3306)/db_go_one_server?charset=utf8mb4&parseTime=True&loc=Local
 
 # Redis配置
 redis:

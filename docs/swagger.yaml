@@ -12,7 +12,7 @@ info:
   contact: {}
   description: 基于Gin进行快速构建RESTful API 服务的脚手架
   license: {}
-  title: go-one-piece
+  title: go-one-server
   version: "1.0"
 paths:
   /api/v1/examples/get:
