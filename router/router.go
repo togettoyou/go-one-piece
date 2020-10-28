@@ -1,6 +1,7 @@
 package router
 
 import (
+	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	"go-one-piece/handler/v1/examples"
 	"go-one-piece/router/middleware"
@@ -10,6 +11,8 @@ func InitRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(middleware.Logger())
 	r.Use(gin.Recovery())
+	// debug模式开启性能分析
+	pprof.Register(r)
 	apiV1 := r.Group("/api/v1")
 	initExamplesRouter(apiV1)
 	return r

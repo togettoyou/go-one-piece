@@ -104,6 +104,7 @@ func (g *Gin) ParseFormRequest(request interface{}, hideDetails ...bool) bool {
 	return validatorData(g, request, len(hideDetails) > 0 && hideDetails[0])
 }
 
+// hideDetails可选择隐藏参数校验详细信息
 func validatorData(g *Gin, request interface{}, hideDetails bool) bool {
 	if err := myValidator.V.Struct(request); err != nil {
 		var eno error
