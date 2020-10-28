@@ -3,6 +3,7 @@ package middleware
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"go-one-server/handler"
 	"time"
 
@@ -46,7 +47,7 @@ func Logger() gin.HandlerFunc {
 		if bodyLogWriter.body.String() != "" {
 			err := json.Unmarshal(bodyLogWriter.body.Bytes(), &resp)
 			if err == nil {
-				result = "\tresponse msg: " + resp.Msg
+				result = fmt.Sprintf("\tresponse code: %d\tresponse msg: %s", resp.Code, resp.Msg)
 			}
 		}
 		if statusCode > 499 {

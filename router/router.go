@@ -30,5 +30,11 @@ func initExamplesRouter(api *gin.RouterGroup) {
 	examplesRouterGroup := api.Group("/examples")
 	{
 		examplesRouterGroup.GET("/get", examples.GetExamples)
+		examplesRouterGroup.GET("/uri/:id", examples.UriExamples)
+		examplesRouterGroup.GET("/query", examples.QueryExamples)
+		examplesRouterGroup.POST("/form", examples.FormDataExamples)
+		examplesRouterGroup.POST("/json", examples.JSONExamples)
+		examplesRouterGroup.GET("/query/array", examples.QueryArrayExamples)
+		examplesRouterGroup.GET("/query/map", examples.QueryMapExamples)
 	}
 }
