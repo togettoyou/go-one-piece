@@ -31,6 +31,6 @@ func resetGinMode() {
 	if mode, ok := modes[conf.Config.Server.RunMode]; ok {
 		gin.SetMode(mode)
 	} else {
-		gin.SetMode("debug")
+		gin.SetMode(DebugMode)
 	}
 }

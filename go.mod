@@ -3,6 +3,7 @@ module go-one-piece
 go 1.14
 
 require (
+	github.com/alecthomas/template v0.0.0-20190718012654-fb15b899a751
 	github.com/fsnotify/fsnotify v1.4.9
 	github.com/gin-contrib/cors v1.3.1
 	github.com/gin-contrib/pprof v1.3.0
@@ -12,5 +13,7 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/spf13/viper v1.7.1
+	github.com/swaggo/gin-swagger v1.2.0
+	github.com/swaggo/swag v1.6.9
 	go.uber.org/zap v1.16.0
 )

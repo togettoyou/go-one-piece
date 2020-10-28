@@ -1,0 +1,13 @@
+info:
+  contact: {}
+  description: 基于Gin进行快速构建RESTful API 服务的脚手架
+  license: {}
+  title: go-one-piece
+  version: "1.0"
+paths: {}
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"

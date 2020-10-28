@@ -18,6 +18,12 @@ func init() {
 	validator.Setup()
 }
 
+// @title go-one-piece
+// @version 1.0
+// @description 基于Gin进行快速构建RESTful API 服务的脚手架
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name Authorization
 func main() {
 	reload := make(chan int, 1)
 	conf.OnConfigChange(func() { reload <- 1 })
