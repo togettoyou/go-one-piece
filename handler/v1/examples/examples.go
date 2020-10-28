@@ -5,17 +5,14 @@ import (
 	. "go-one-piece/handler"
 )
 
-type Body struct {
-	Username string `json:"username" form:"username" validate:"required,checkUsername"`
+type ValidateBody struct {
+	Validate string `json:"validate" form:"validate" validate:"required,checkUsername"`
 }
 
 func GetExamples(c *gin.Context) {
 	g := Gin{Ctx: c}
-	var body Body
+	var body ValidateBody
 	if !g.ParseQueryRequest(&body) {
-		return
-	}
-	if g.HasError(nil) {
 		return
 	}
 	g.OkWithDataResponse(body)
