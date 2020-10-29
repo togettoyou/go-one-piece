@@ -1,8 +1,10 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/spf13/pflag"
 	"go-one-server/model"
 	"go-one-server/router"
 	"go-one-server/util"
@@ -10,17 +12,23 @@ import (
 	"go-one-server/util/logger"
 	"go-one-server/util/times"
 	"go-one-server/util/validator"
+	"go-one-server/util/version"
 	"go.uber.org/zap"
 	"net/http"
+	"os"
 	"time"
 )
 
-func init() {
+func setup() {
 	conf.Setup()
 	logger.Setup()
 	validator.Setup()
 	model.Setup()
 }
+
+var (
+	v = pflag.BoolP("version", "v", false, "show version info.")
+)
 
 // @title go-one-server
 // @version 1.0
@@ -29,6 +37,18 @@ func init() {
 // @in header
 // @name Authorization
 func main() {
+	pflag.Parse()
+	if *v {
+		info := version.Get()
+		marshalled, err := json.MarshalIndent(&info, "", "  ")
+		if err != nil {
+			fmt.Printf("%v\n", err)
+			os.Exit(1)
+		}
+		fmt.Println(string(marshalled))
+		return
+	}
+	setup()
 	reload := make(chan int, 1)
 	conf.OnConfigChange(func() { reload <- 1 })
 	startServer()

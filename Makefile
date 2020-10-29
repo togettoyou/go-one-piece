@@ -4,13 +4,21 @@
 # 生成的二进制文件名
 BINARY_NAME="go-one-server"
 
+# 编译添加版本信息
+versionDir = "${BINARY_NAME}/util/version"
+gitTag = $(shell if [ "`git describe --tags --abbrev=0 2>/dev/null`" != "" ];then git describe --tags --abbrev=0; else git log --pretty=format:'%h' -n 1; fi)
+buildDate = $(shell TZ=Asia/Shanghai date +%FT%T%z)
+gitCommit = $(shell git log --pretty=format:'%H' -n 1)
+gitTreeState = $(shell if git status|grep -q 'clean';then echo clean; else echo dirty; fi)
+ldflags="-w -X ${versionDir}.gitTag=${gitTag} -X ${versionDir}.buildDate=${buildDate} -X ${versionDir}.gitCommit=${gitCommit} -X ${versionDir}.gitTreeState=${gitTreeState}"
+
 # 执行make命令时所执行的所有命令
 all: gotool
-	go build  -o ${BINARY_NAME}
+	go build -v -ldflags ${ldflags} -o ${BINARY_NAME} .
 
 # 交叉编译linux amd64版本
 build-linux:
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o ${BINARY_NAME}
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -ldflags ${ldflags} -o ${BINARY_NAME} .
 
 # 运行项目
 run:
