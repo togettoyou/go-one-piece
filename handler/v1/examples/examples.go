@@ -17,7 +17,7 @@ func GetExamples(c *gin.Context) {
 }
 
 type UriBodyExamples struct {
-	ID uint `json:"id" uri:"id" validate:"required,min=10"`
+	ID uint `json:"id" uri:"id" binding:"required,min=10"`
 }
 
 // @Tags examples
@@ -39,7 +39,7 @@ func UriExamples(c *gin.Context) {
 }
 
 type QueryBodyExamples struct {
-	Email string `json:"email" form:"email" validate:"required,email"`
+	Email string `json:"email" form:"email" binding:"required,email"`
 }
 
 // @Tags examples
@@ -61,7 +61,7 @@ func QueryExamples(c *gin.Context) {
 }
 
 type FormBodyExamples struct {
-	Email string `json:"email" form:"email" validate:"required,email"`
+	Email string `json:"email" form:"email" binding:"required,email"`
 }
 
 // @Tags examples
@@ -84,8 +84,8 @@ func FormDataExamples(c *gin.Context) {
 }
 
 type JSONBodyExamples struct {
-	Email    string `json:"email" validate:"required,email"`
-	Username string `json:"username" validate:"required,checkUsername"`
+	Email    string `json:"email" binding:"required,email"`
+	Username string `json:"username" binding:"required,checkUsername"`
 }
 
 // @Tags examples

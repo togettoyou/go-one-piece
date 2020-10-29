@@ -1,6 +1,7 @@
 package validator
 
 import (
+	"github.com/gin-gonic/gin/binding"
 	"github.com/go-playground/locales/en"
 	"github.com/go-playground/locales/zh"
 	ut "github.com/go-playground/universal-translator"
@@ -12,36 +13,38 @@ import (
 )
 
 var (
-	V     *validator.Validate
+	v     *validator.Validate
 	trans ut.Translator
 )
 
-// 直接使用validator库
+// 定制gin内置的validator
 func Setup() {
-	V = validator.New()
-	zhT := zh.New() // 中文翻译器
-	enT := en.New() // 英文翻译器
-	uni := ut.New(enT, zhT, enT)
 	var ok bool
-	trans, ok = uni.GetTranslator("zh")
-	if !ok {
-		zap.L().Error("translator is not ok")
-		return
+	if v, ok = binding.Validator.Engine().(*validator.Validate); ok {
+		zhT := zh.New()              // 中文翻译器
+		enT := en.New()              // 英文翻译器
+		uni := ut.New(enT, zhT, enT) // 支持中英文，不支持时选择回滚英文
+		var transOk bool
+		trans, transOk = uni.GetTranslator("zh")
+		if !transOk {
+			zap.L().Error("translator is not ok")
+			return
+		}
+		// 验证器注册翻译器
+		err := zhTranslations.RegisterDefaultTranslations(v, trans)
+		if err != nil {
+			zap.L().Error(err.Error())
+			return
+		}
+		registerTagNameFunc()
+		registerValidationTranslation([]validationTranslation{
+			{
+				tag: "checkUsername",
+				Fun: checkUsername,
+				msg: "{0}必须是由字母开头的4-16位字母和数字组成的字符串",
+			},
+		})
 	}
-	// 验证器注册翻译器
-	err := zhTranslations.RegisterDefaultTranslations(V, trans)
-	if err != nil {
-		zap.L().Error(err.Error())
-		return
-	}
-	registerTagNameFunc()
-	registerValidationTranslation([]validationTranslation{
-		{
-			tag: "checkUsername",
-			Fun: checkUsername,
-			msg: "用户名必须是由字母开头的4-16位字母和数字组成的字符串",
-		},
-	})
 }
 
 // 以msg方式翻译错误消息
@@ -58,9 +61,9 @@ func TranslateErrData(errs validator.ValidationErrors) map[string]string {
 	return removeTopStruct(errs.Translate(trans))
 }
 
-// 注册一个获取json tag的自定义方法
+// 获取json标签，作为字段名称
 func registerTagNameFunc() {
-	V.RegisterTagNameFunc(func(fld reflect.StructField) string {
+	v.RegisterTagNameFunc(func(fld reflect.StructField) string {
 		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
 		if name == "-" {
 			return ""
@@ -85,16 +88,20 @@ func registerValidationTranslation(vs []validationTranslation) {
 
 // 自定义验证方法
 func registerValidation(tag string, fun validator.Func) {
-	_ = V.RegisterValidation(tag, fun)
+	if err := v.RegisterValidation(tag, fun); err != nil {
+		zap.L().Error(err.Error())
+	}
 }
 
 // 根据自定义的标记注册翻译
 func registerTranslation(tag string, registerFn validator.RegisterTranslationsFunc) {
-	_ = V.RegisterTranslation(
+	if err := v.RegisterTranslation(
 		tag,
 		trans,
 		registerFn,
-		translate)
+		translate); err != nil {
+		zap.L().Error(err.Error())
+	}
 }
 
 // 为自定义字段添加翻译功能

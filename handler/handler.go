@@ -74,39 +74,35 @@ func (g *Gin) HasError(err error) bool {
 
 func (g *Gin) ParseUriRequest(request interface{}, hideDetails ...bool) bool {
 	if err := g.Ctx.ShouldBindUri(request); err != nil {
-		g.SendNoDataResponse(errno.ErrBind)
-		return false
+		return validatorData(g, err, len(hideDetails) > 0 && hideDetails[0])
 	}
-	return validatorData(g, request, len(hideDetails) > 0 && hideDetails[0])
+	return true
 }
 
 func (g *Gin) ParseQueryRequest(request interface{}, hideDetails ...bool) bool {
 	if err := g.Ctx.ShouldBindQuery(request); err != nil {
-		g.SendNoDataResponse(errno.ErrBind)
-		return false
+		return validatorData(g, err, len(hideDetails) > 0 && hideDetails[0])
 	}
-	return validatorData(g, request, len(hideDetails) > 0 && hideDetails[0])
+	return true
 }
 
 func (g *Gin) ParseJSONRequest(request interface{}, hideDetails ...bool) bool {
 	if err := g.Ctx.ShouldBindJSON(request); err != nil {
-		g.SendNoDataResponse(errno.ErrBind)
-		return false
+		return validatorData(g, err, len(hideDetails) > 0 && hideDetails[0])
 	}
-	return validatorData(g, request, len(hideDetails) > 0 && hideDetails[0])
+	return true
 }
 
 func (g *Gin) ParseFormRequest(request interface{}, hideDetails ...bool) bool {
 	if err := g.Ctx.ShouldBindWith(request, binding.Form); err != nil {
-		g.SendNoDataResponse(errno.ErrBind)
-		return false
+		return validatorData(g, err, len(hideDetails) > 0 && hideDetails[0])
 	}
-	return validatorData(g, request, len(hideDetails) > 0 && hideDetails[0])
+	return true
 }
 
 // hideDetails可选择隐藏参数校验详细信息
-func validatorData(g *Gin, request interface{}, hideDetails bool) bool {
-	if err := myValidator.V.Struct(request); err != nil {
+func validatorData(g *Gin, err error, hideDetails bool) bool {
+	if _, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		var eno error
 		switch err.(type) {
 		case validator.ValidationErrors:
@@ -121,5 +117,6 @@ func validatorData(g *Gin, request interface{}, hideDetails bool) bool {
 		g.SendNoDataResponse(eno)
 		return false
 	}
-	return true
+	g.SendNoDataResponse(errno.ErrBind)
+	return false
 }
