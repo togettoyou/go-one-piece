@@ -13,7 +13,7 @@ require (
 	github.com/go-playground/validator/v10 v10.4.1
 	github.com/natefinch/lumberjack v2.0.0+incompatible
 	github.com/spf13/viper v1.7.1
-	github.com/swaggo/gin-swagger v1.2.0
+	github.com/swaggo/gin-swagger v1.3.0
 	github.com/swaggo/swag v1.6.9
 	go.uber.org/zap v1.16.0
 	gorm.io/driver/mysql v1.0.3
