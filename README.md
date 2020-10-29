@@ -12,3 +12,4 @@ go-one-server是基于Gin进行快速构建RESTful API 服务的脚手架
 - [err错误码](https://github.com/togettoyou/go-one-server/blob/main/util/errno/code.go)
 - [请求参数校验](https://github.com/togettoyou/go-one-server/blob/main/util/validator/validate.go)
 - [gin中间件](https://github.com/togettoyou/go-one-server/blob/main/router/middleware/README.md)
+- [swagger接口文档](https://github.com/togettoyou/go-one-server/tree/main/docs)
