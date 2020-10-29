@@ -24,8 +24,6 @@ type server struct {
 	ReadTimeout  time.Duration `yaml:"readTimeout"`
 	WriteTimeout time.Duration `yaml:"writeTimeout"`
 	HttpPort     int           `yaml:"httpPort"`
-	Url          string        `yaml:"url"`
-	MaxPingCount int           `yaml:"maxPingCount"`
 }
 
 type logConfig struct {

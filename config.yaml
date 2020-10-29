@@ -11,10 +11,6 @@ server:
   writeTimeout: 60
   # 端口
   httpPort: 9999
-  # pingServer函数请求的API服务器的ip:port
-  url: http://127.0.0.1:9999
-  # pingServer函数try的次数
-  maxPingCount: 10
 
 # 日志配置
 logConfig:
