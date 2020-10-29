@@ -74,34 +74,34 @@ func (g *Gin) HasError(err error) bool {
 
 func (g *Gin) ParseUriRequest(request interface{}, hideDetails ...bool) bool {
 	if err := g.Ctx.ShouldBindUri(request); err != nil {
-		return validatorData(g, err, len(hideDetails) > 0 && hideDetails[0])
+		return g.ValidatorData(err, len(hideDetails) > 0 && hideDetails[0])
 	}
 	return true
 }
 
 func (g *Gin) ParseQueryRequest(request interface{}, hideDetails ...bool) bool {
 	if err := g.Ctx.ShouldBindQuery(request); err != nil {
-		return validatorData(g, err, len(hideDetails) > 0 && hideDetails[0])
+		return g.ValidatorData(err, len(hideDetails) > 0 && hideDetails[0])
 	}
 	return true
 }
 
 func (g *Gin) ParseJSONRequest(request interface{}, hideDetails ...bool) bool {
 	if err := g.Ctx.ShouldBindJSON(request); err != nil {
-		return validatorData(g, err, len(hideDetails) > 0 && hideDetails[0])
+		return g.ValidatorData(err, len(hideDetails) > 0 && hideDetails[0])
 	}
 	return true
 }
 
 func (g *Gin) ParseFormRequest(request interface{}, hideDetails ...bool) bool {
 	if err := g.Ctx.ShouldBindWith(request, binding.Form); err != nil {
-		return validatorData(g, err, len(hideDetails) > 0 && hideDetails[0])
+		return g.ValidatorData(err, len(hideDetails) > 0 && hideDetails[0])
 	}
 	return true
 }
 
 // hideDetails可选择隐藏参数校验详细信息
-func validatorData(g *Gin, err error, hideDetails bool) bool {
+func (g *Gin) ValidatorData(err error, hideDetails bool) bool {
 	if _, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		var eno error
 		switch err.(type) {
