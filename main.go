@@ -10,7 +10,7 @@ import (
 	"go-one-server/util"
 	"go-one-server/util/conf"
 	"go-one-server/util/logger"
-	"go-one-server/util/times"
+	"go-one-server/util/tools"
 	"go-one-server/util/validator"
 	"go-one-server/util/version"
 	"go.uber.org/zap"
@@ -63,7 +63,7 @@ func main() {
 func startServer() {
 	timeLocal := time.FixedZone("CST", 8*3600)
 	time.Local = timeLocal
-	zap.L().Info(time.Now().Format(times.TimeFormat))
+	zap.L().Info(time.Now().Format(tools.TimeFormat))
 	gin.SetMode(conf.Config.Server.RunMode)
 	httpPort := fmt.Sprintf(":%d", conf.Config.Server.HttpPort)
 	server := &http.Server{
