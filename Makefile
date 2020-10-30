@@ -13,7 +13,7 @@ gitTreeState = $(shell if git status|grep -q 'clean';then echo clean; else echo 
 ldflags="-w -X ${versionDir}.gitTag=${gitTag} -X ${versionDir}.buildDate=${buildDate} -X ${versionDir}.gitCommit=${gitCommit} -X ${versionDir}.gitTreeState=${gitTreeState}"
 
 # 执行make命令时所执行的所有命令
-all: gotool
+all: gotool clean
 	go build -v -ldflags ${ldflags} -o ${BINARY_NAME} .
 
 # 交叉编译linux amd64版本
