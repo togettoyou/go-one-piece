@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	. "go-one-server/handler"
 	"go-one-server/model"
+	"go-one-server/router/middleware"
 	"go-one-server/service/mock_service/user_service"
 	"go-one-server/util/tools"
 )
@@ -65,4 +66,35 @@ func Login(c *gin.Context) {
 		return
 	}
 	g.OkWithDataResponse(data)
+}
+
+type UserInfoBody struct {
+	NickName  string `json:"nick_name" binding:"omitempty"`
+	HeaderImg string `json:"header_img" binding:"omitempty,url"`
+}
+
+// @Tags mock用户
+// @Summary 用户修改信息
+// @Produce json
+// @Security ApiKeyAuth
+// @Param data body UserInfoBody true "修改信息"
+// @Success 200 {object} handler.Response
+// @Failure 500 {object} handler.Response
+// @Router /api/v1/mock/userInfo [patch]
+func UpdateUserInfo(c *gin.Context) {
+	g := Gin{Ctx: c}
+	var body UserInfoBody
+	if !g.ParseJSONRequest(&body) {
+		return
+	}
+	claims := middleware.GetJWTClaims(c)
+	user := model.User{
+		Username:  claims.Issuer,
+		NickName:  body.NickName,
+		HeaderImg: body.HeaderImg,
+	}
+	if g.HasError(user.UpdateUserInfo()) {
+		return
+	}
+	g.OkWithMsgResponse("修改成功")
 }

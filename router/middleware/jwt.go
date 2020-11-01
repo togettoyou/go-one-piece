@@ -1,0 +1,52 @@
+package middleware
+
+import (
+	"github.com/dgrijalva/jwt-go"
+	"github.com/gin-gonic/gin"
+	. "go-one-server/handler"
+	"go-one-server/util/errno"
+	"go-one-server/util/tools"
+	"strings"
+)
+
+var jwtClaims = "jwtClaims"
+
+func JWT() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		g := Gin{Ctx: c}
+		auth := c.Request.Header.Get("Authorization")
+		if len(auth) == 0 {
+			g.SendNoDataResponse(errno.ErrNotLogin)
+			c.Abort()
+			return
+		}
+		if len(strings.Fields(auth)) > 1 {
+			auth = strings.Fields(auth)[1]
+		}
+		// 校验token
+		claims, err := tools.ParseJWT(auth)
+		if err != nil {
+			if validationError, ok := err.(*jwt.ValidationError); ok {
+				switch validationError.Errors {
+				case jwt.ValidationErrorExpired:
+					g.SendNoDataResponse(errno.ErrTokenExpired)
+					break
+				}
+			}
+			g.SendNoDataResponse(errno.ErrTokenInvalid)
+			c.Abort()
+			return
+		}
+		c.Set(jwtClaims, claims)
+		c.Next()
+	}
+}
+
+func GetJWTClaims(c *gin.Context) *tools.Claims {
+	if claims, ok := c.Get(jwtClaims); ok {
+		if cs, ok := claims.(*tools.Claims); ok {
+			return cs
+		}
+	}
+	return nil
+}

@@ -42,6 +42,13 @@ definitions:
     - password
     - username
     type: object
+  mock.UserInfoBody:
+    properties:
+      header_img:
+        type: string
+      nick_name:
+        type: string
+    type: object
 info:
   contact: {}
   description: 基于Gin进行快速构建RESTful API 服务的脚手架
@@ -239,6 +246,31 @@ paths:
       summary: uri参数请求
       tags:
       - mock
+  /api/v1/mock/userInfo:
+    patch:
+      parameters:
+      - description: 修改信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/mock.UserInfoBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户修改信息
+      tags:
+      - mock用户
 securityDefinitions:
   ApiKeyAuth:
     in: header

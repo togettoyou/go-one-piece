@@ -13,8 +13,9 @@ var (
 	ErrUnknown          = &Errno{Code: 10003, Message: "Unknown Error"}
 
 	ErrValidation   = &Errno{Code: 20001, Message: "Validation failed."}
-	ErrDatabase     = &Errno{Code: 20002, Message: "Database error."}
-	ErrTokenInvalid = &Errno{Code: 20003, Message: "The token was invalid."}
+	ErrNotLogin     = &Errno{Code: 20002, Message: "Please login."}
+	ErrTokenExpired = &Errno{Code: 20003, Message: "The token was expired."}
+	ErrTokenInvalid = &Errno{Code: 20004, Message: "The token was invalid."}
 
 	// user errors
 	ErrUserNotFound      = &Errno{Code: 20101, Message: "The user was not found."}

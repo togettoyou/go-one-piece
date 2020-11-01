@@ -317,6 +317,47 @@ var doc = `{
                     }
                 }
             }
+        },
+        "/api/v1/mock/userInfo": {
+            "patch": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mock用户"
+                ],
+                "summary": "用户修改信息",
+                "parameters": [
+                    {
+                        "description": "修改信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/mock.UserInfoBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    }
+                }
+            }
         }
     },
     "definitions": {
@@ -381,6 +422,17 @@ var doc = `{
                     "type": "string"
                 },
                 "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "mock.UserInfoBody": {
+            "type": "object",
+            "properties": {
+                "header_img": {
+                    "type": "string"
+                },
+                "nick_name": {
                     "type": "string"
                 }
             }
