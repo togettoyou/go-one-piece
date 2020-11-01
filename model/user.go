@@ -67,3 +67,12 @@ func FindUser(username string) (*User, error) {
 	}
 	return &user, nil
 }
+
+func GetUserList(page, pageSize int) (data *PaginationQ, err error) {
+	q := PaginationQ{
+		PageSize: pageSize,
+		Page:     page,
+		Data:     &[]User{},
+	}
+	return q.PaginateScan(db.Model(&User{}))
+}

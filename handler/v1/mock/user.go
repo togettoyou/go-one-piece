@@ -9,6 +9,32 @@ import (
 	"go-one-server/util/tools"
 )
 
+type PaginationQueryBody struct {
+	Page     int `json:"page" form:"page"`
+	PageSize int `json:"page_size" form:"page_size"`
+}
+
+// @Tags mock用户
+// @Summary 分页获取用户列表
+// @Produce  json
+// @Param page query int false "页码"
+// @Param page_size query int false "页面大小"
+// @Success 200 {object} handler.Response
+// @Failure 500 {object} handler.Response
+// @Router /api/v1/mock/userList [get]
+func GetUserList(c *gin.Context) {
+	g := Gin{Ctx: c}
+	var body PaginationQueryBody
+	if !g.ParseQueryRequest(&body) {
+		return
+	}
+	userList, err := model.GetUserList(body.Page, body.PageSize)
+	if g.HasError(err) {
+		return
+	}
+	g.OkWithDataResponse(userList)
+}
+
 type RegisteredBody struct {
 	Username  string `json:"username" binding:"required,checkUsername"`
 	Password  string `json:"password" binding:"required"`
