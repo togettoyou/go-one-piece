@@ -247,6 +247,23 @@ paths:
       tags:
       - mock
   /api/v1/mock/userInfo:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 用户查看信息
+      tags:
+      - mock用户
     patch:
       parameters:
       - description: 修改信息

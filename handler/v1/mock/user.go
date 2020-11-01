@@ -68,6 +68,23 @@ func Login(c *gin.Context) {
 	g.OkWithDataResponse(data)
 }
 
+// @Tags mock用户
+// @Summary 用户查看信息
+// @Produce json
+// @Security ApiKeyAuth
+// @Success 200 {object} handler.Response
+// @Failure 500 {object} handler.Response
+// @Router /api/v1/mock/userInfo [get]
+func GetUserInfo(c *gin.Context) {
+	g := Gin{Ctx: c}
+	claims := middleware.GetJWTClaims(c)
+	user, err := model.FindUser(claims.Issuer)
+	if g.HasError(err) {
+		return
+	}
+	g.OkWithDataResponse(user)
+}
+
 type UserInfoBody struct {
 	NickName  string `json:"nick_name" binding:"omitempty"`
 	HeaderImg string `json:"header_img" binding:"omitempty,url"`

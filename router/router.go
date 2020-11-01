@@ -40,6 +40,7 @@ func initMockRouter(api *gin.RouterGroup) {
 	{
 		mockRouterGroup.POST("/registered", mock.Registered)
 		mockRouterGroup.POST("/login", mock.Login)
+		mockRouterGroup.GET("/userInfo", middleware.JWT(), mock.GetUserInfo)
 		mockRouterGroup.PATCH("/userInfo", middleware.JWT(), mock.UpdateUserInfo)
 	}
 }
