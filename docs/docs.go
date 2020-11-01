@@ -131,7 +131,7 @@ var doc = `{
                     "application/json"
                 ],
                 "tags": [
-                    "mock"
+                    "mock用户"
                 ],
                 "summary": "用户登录",
                 "parameters": [
@@ -248,6 +248,42 @@ var doc = `{
                 }
             }
         },
+        "/api/v1/mock/registered": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mock用户"
+                ],
+                "summary": "用户注册",
+                "parameters": [
+                    {
+                        "description": "注册信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/mock.RegisteredBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/mock/uri/{id}": {
             "get": {
                 "description": "路径参数，匹配 /uri/{id}",
@@ -320,6 +356,27 @@ var doc = `{
                 "username"
             ],
             "properties": {
+                "password": {
+                    "type": "string"
+                },
+                "username": {
+                    "type": "string"
+                }
+            }
+        },
+        "mock.RegisteredBody": {
+            "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
+            "properties": {
+                "header_img": {
+                    "type": "string"
+                },
+                "nick_name": {
+                    "type": "string"
+                },
                 "password": {
                     "type": "string"
                 },

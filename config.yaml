@@ -1,6 +1,7 @@
 # 程序配置
 app:
-  jwtSecret: e7b3e907df88943aff31c0007feecdb6
+  # jwt签名秘钥，务必更改
+  jwtSecret: 3bf6a2bf959f57a946139521a75acf0d
 
 # 服务配置
 server:

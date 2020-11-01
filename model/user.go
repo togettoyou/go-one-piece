@@ -20,6 +20,11 @@ type User struct {
 // 创建钩子 https://gorm.io/zh_CN/docs/hooks.html
 // 创建记录时将调用这些钩子方法
 func (u *User) BeforeCreate(tx *gorm.DB) error {
+	var count int64
+	db.Model(&User{}).Where("username = ?", u.Username).Count(&count)
+	if count > 0 {
+		return errno.ErrUserExisting
+	}
 	u.UUID = uuid.Must(uuid.NewV4(), nil)
 	return nil
 }
@@ -30,31 +35,31 @@ func (u *User) Create() error {
 }
 
 // 软删除
-func DeleteUser(uuid string) error {
-	return db.Where("uuid = ?", uuid).Delete(&User{}).Error
+func DeleteUser(username string) error {
+	return db.Where("username = ?", username).Delete(&User{}).Error
 }
 
-// 根据uuid更新资料
+// 根据username更新资料
 func (u *User) UpdateUserInfo() error {
 	// NickName和HeaderImg中只会更新非零值的字段
-	return db.Model(&User{}).Where("uuid = ?", u.UUID).
+	return db.Model(&User{}).Where("username = ?", u.Username).
 		Updates(User{NickName: u.NickName, HeaderImg: u.HeaderImg}).
 		Error
 }
 
-// 根据uuid更改密码
+// 根据username更改密码
 func (u *User) UpdateUserPw() error {
 	// Select更新选定字段
-	return db.Model(&User{}).Where("uuid = ?", u.UUID).
+	return db.Model(&User{}).Where("username = ?", u.Username).
 		Select("Password", "Salt").
 		Updates(u).
 		Error
 }
 
-// 根据uuid查询记录
-func FindUser(uuid string) (*User, error) {
+// 根据username查询记录
+func FindUser(username string) (*User, error) {
 	var user User
-	if err := db.Where(map[string]interface{}{"uuid": uuid}).Take(&user).Error; err != nil {
+	if err := db.Where(map[string]interface{}{"username": username}).Take(&user).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, errno.ErrUserNotFound
 		}

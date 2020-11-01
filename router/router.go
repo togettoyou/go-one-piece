@@ -38,6 +38,7 @@ func initMockRouter(api *gin.RouterGroup) {
 		mockRouterGroup.GET("/query/map", mock.QueryMap)
 	}
 	{
+		mockRouterGroup.POST("/registered", mock.Registered)
 		mockRouterGroup.POST("/login", mock.Login)
 	}
 }
