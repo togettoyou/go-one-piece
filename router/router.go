@@ -7,7 +7,7 @@ import (
 	"github.com/swaggo/gin-swagger"
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 	_ "go-one-server/docs"
-	"go-one-server/handler/v1/examples"
+	"go-one-server/handler/v1/mock"
 	"go-one-server/router/middleware"
 )
 
@@ -22,19 +22,22 @@ func InitRouter() *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	//api路由分组v1版本
 	apiV1 := r.Group("/api/v1")
-	initExamplesRouter(apiV1)
+	initMockRouter(apiV1)
 	return r
 }
 
-func initExamplesRouter(api *gin.RouterGroup) {
-	examplesRouterGroup := api.Group("/examples")
+func initMockRouter(api *gin.RouterGroup) {
+	mockRouterGroup := api.Group("/mock")
 	{
-		examplesRouterGroup.GET("/get", examples.GetExamples)
-		examplesRouterGroup.GET("/uri/:id", examples.UriExamples)
-		examplesRouterGroup.GET("/query", examples.QueryExamples)
-		examplesRouterGroup.POST("/form", examples.FormDataExamples)
-		examplesRouterGroup.POST("/json", examples.JSONExamples)
-		examplesRouterGroup.GET("/query/array", examples.QueryArrayExamples)
-		examplesRouterGroup.GET("/query/map", examples.QueryMapExamples)
+		mockRouterGroup.GET("/get", mock.Get)
+		mockRouterGroup.GET("/uri/:id", mock.Uri)
+		mockRouterGroup.GET("/query", mock.Query)
+		mockRouterGroup.POST("/form", mock.FormData)
+		mockRouterGroup.POST("/json", mock.JSON)
+		mockRouterGroup.GET("/query/array", mock.QueryArray)
+		mockRouterGroup.GET("/query/map", mock.QueryMap)
+	}
+	{
+		mockRouterGroup.POST("/login", mock.Login)
 	}
 }

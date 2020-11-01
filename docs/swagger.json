@@ -8,7 +8,7 @@
         "version": "1.0"
     },
     "paths": {
-        "/api/v1/examples/form": {
+        "/api/v1/mock/form": {
             "post": {
                 "description": "处理application/x-www-form-urlencoded类型的POST请求",
                 "consumes": [
@@ -18,7 +18,7 @@
                     "application/json"
                 ],
                 "tags": [
-                    "examples"
+                    "mock"
                 ],
                 "summary": "form表单请求",
                 "parameters": [
@@ -46,13 +46,13 @@
                 }
             }
         },
-        "/api/v1/examples/get": {
+        "/api/v1/mock/get": {
             "get": {
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "examples"
+                    "mock"
                 ],
                 "summary": "Get请求",
                 "responses": {
@@ -71,14 +71,14 @@
                 }
             }
         },
-        "/api/v1/examples/json": {
+        "/api/v1/mock/json": {
             "post": {
                 "description": "邮箱、用户名校验",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "examples"
+                    "mock"
                 ],
                 "summary": "JSON参数请求",
                 "parameters": [
@@ -88,7 +88,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/examples.JSONBodyExamples"
+                            "$ref": "#/definitions/mock.JSONBody"
                         }
                     }
                 ],
@@ -108,14 +108,50 @@
                 }
             }
         },
-        "/api/v1/examples/query": {
+        "/api/v1/mock/login": {
+            "post": {
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "mock"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "description": "登录信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/mock.LoginBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/mock/query": {
             "get": {
                 "description": "查询参数，匹配 query?id=xxx",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "examples"
+                    "mock"
                 ],
                 "summary": "query参数查询",
                 "parameters": [
@@ -143,14 +179,14 @@
                 }
             }
         },
-        "/api/v1/examples/query/array": {
+        "/api/v1/mock/query/array": {
             "get": {
                 "description": "数组参数，匹配多选业务如 array?ids=xxx\u0026ids=xxx\u0026ids=xxx,key一样，value不同",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "examples"
+                    "mock"
                 ],
                 "summary": "queryArray参数查询",
                 "responses": {
@@ -169,14 +205,14 @@
                 }
             }
         },
-        "/api/v1/examples/query/map": {
+        "/api/v1/mock/query/map": {
             "get": {
                 "description": "map参数，字典参数，匹配 map?ids[a]=123\u0026ids[b]=456\u0026ids[c]=789",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "examples"
+                    "mock"
                 ],
                 "summary": "queryMap参数查询",
                 "responses": {
@@ -195,14 +231,14 @@
                 }
             }
         },
-        "/api/v1/examples/uri/{id}": {
+        "/api/v1/mock/uri/{id}": {
             "get": {
                 "description": "路径参数，匹配 /uri/{id}",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
-                    "examples"
+                    "mock"
                 ],
                 "summary": "uri参数请求",
                 "parameters": [
@@ -231,7 +267,21 @@
         }
     },
     "definitions": {
-        "examples.JSONBodyExamples": {
+        "handler.Response": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "type": "integer"
+                },
+                "data": {
+                    "type": "object"
+                },
+                "msg": {
+                    "type": "string"
+                }
+            }
+        },
+        "mock.JSONBody": {
             "type": "object",
             "required": [
                 "email",
@@ -246,16 +296,17 @@
                 }
             }
         },
-        "handler.Response": {
+        "mock.LoginBody": {
             "type": "object",
+            "required": [
+                "password",
+                "username"
+            ],
             "properties": {
-                "code": {
-                    "type": "integer"
+                "password": {
+                    "type": "string"
                 },
-                "data": {
-                    "type": "object"
-                },
-                "msg": {
+                "username": {
                     "type": "string"
                 }
             }

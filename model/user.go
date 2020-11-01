@@ -2,7 +2,7 @@ package model
 
 import (
 	"github.com/satori/go.uuid"
-	"go.uber.org/zap"
+	"go-one-server/util/errno"
 	"gorm.io/gorm"
 )
 
@@ -17,18 +17,6 @@ type User struct {
 	HeaderImg string    `json:"header_img" gorm:"default:https://avatars0.githubusercontent.com/u/55381228;comment:用户头像"`
 }
 
-func initUser() {
-	// 如果数据库中不存在该表，则创建表
-	if !db.Migrator().HasTable(&User{}) {
-		// 创建表时添加后缀
-		if err := db.Set("gorm:table_options",
-			"ENGINE=InnoDB DEFAULT CHARSET=utf8").
-			Migrator().CreateTable(&User{}); err != nil {
-			zap.L().Error(err.Error())
-		}
-	}
-}
-
 // 创建钩子 https://gorm.io/zh_CN/docs/hooks.html
 // 创建记录时将调用这些钩子方法
 func (u *User) BeforeCreate(tx *gorm.DB) error {
@@ -38,14 +26,39 @@ func (u *User) BeforeCreate(tx *gorm.DB) error {
 
 // 创建单条记录
 func (u *User) Create() error {
-	return db.Create(&u).Error
+	return db.Create(u).Error
 }
 
-type Users struct {
-	Users []User `json:"users"`
+// 软删除
+func DeleteUser(uuid string) error {
+	return db.Where("uuid = ?", uuid).Delete(&User{}).Error
 }
 
-// 批量插入记录
-func (us *Users) Create() error {
-	return db.Create(&us.Users).Error
+// 根据uuid更新资料
+func (u *User) UpdateUserInfo() error {
+	// NickName和HeaderImg中只会更新非零值的字段
+	return db.Model(&User{}).Where("uuid = ?", u.UUID).
+		Updates(User{NickName: u.NickName, HeaderImg: u.HeaderImg}).
+		Error
+}
+
+// 根据uuid更改密码
+func (u *User) UpdateUserPw() error {
+	// Select更新选定字段
+	return db.Model(&User{}).Where("uuid = ?", u.UUID).
+		Select("Password", "Salt").
+		Updates(u).
+		Error
+}
+
+// 根据uuid查询记录
+func FindUser(uuid string) (*User, error) {
+	var user User
+	if err := db.Where(map[string]interface{}{"uuid": uuid}).Take(&user).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, errno.ErrUserNotFound
+		}
+		return nil, err
+	}
+	return &user, nil
 }

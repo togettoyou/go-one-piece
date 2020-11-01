@@ -42,11 +42,7 @@ func Setup() {
 		zap.L().Error(err.Error())
 		return
 	}
-	initDB()
-}
-
-func initDB() {
-	initUser()
+	initTable(&User{})
 }
 
 func Reset() {

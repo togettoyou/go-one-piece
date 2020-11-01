@@ -1,14 +1,4 @@
 definitions:
-  examples.JSONBodyExamples:
-    properties:
-      email:
-        type: string
-      username:
-        type: string
-    required:
-    - email
-    - username
-    type: object
   handler.Response:
     properties:
       code:
@@ -18,6 +8,26 @@ definitions:
       msg:
         type: string
     type: object
+  mock.JSONBody:
+    properties:
+      email:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - username
+    type: object
+  mock.LoginBody:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
 info:
   contact: {}
   description: 基于Gin进行快速构建RESTful API 服务的脚手架
@@ -25,7 +35,7 @@ info:
   title: go-one-server
   version: "1.0"
 paths:
-  /api/v1/examples/form:
+  /api/v1/mock/form:
     post:
       consumes:
       - application/x-www-form-urlencoded
@@ -49,8 +59,8 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: form表单请求
       tags:
-      - examples
-  /api/v1/examples/get:
+      - mock
+  /api/v1/mock/get:
     get:
       produces:
       - application/json
@@ -65,8 +75,8 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: Get请求
       tags:
-      - examples
-  /api/v1/examples/json:
+      - mock
+  /api/v1/mock/json:
     post:
       description: 邮箱、用户名校验
       parameters:
@@ -75,7 +85,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/examples.JSONBodyExamples'
+          $ref: '#/definitions/mock.JSONBody'
       produces:
       - application/json
       responses:
@@ -89,8 +99,31 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: JSON参数请求
       tags:
-      - examples
-  /api/v1/examples/query:
+      - mock
+  /api/v1/mock/login:
+    post:
+      parameters:
+      - description: 登录信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/mock.LoginBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: 用户登录
+      tags:
+      - mock
+  /api/v1/mock/query:
     get:
       description: 查询参数，匹配 query?id=xxx
       parameters:
@@ -112,8 +145,8 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: query参数查询
       tags:
-      - examples
-  /api/v1/examples/query/array:
+      - mock
+  /api/v1/mock/query/array:
     get:
       description: 数组参数，匹配多选业务如 array?ids=xxx&ids=xxx&ids=xxx,key一样，value不同
       produces:
@@ -129,8 +162,8 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: queryArray参数查询
       tags:
-      - examples
-  /api/v1/examples/query/map:
+      - mock
+  /api/v1/mock/query/map:
     get:
       description: map参数，字典参数，匹配 map?ids[a]=123&ids[b]=456&ids[c]=789
       produces:
@@ -146,8 +179,8 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: queryMap参数查询
       tags:
-      - examples
-  /api/v1/examples/uri/{id}:
+      - mock
+  /api/v1/mock/uri/{id}:
     get:
       description: 路径参数，匹配 /uri/{id}
       parameters:
@@ -168,7 +201,7 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: uri参数请求
       tags:
-      - examples
+      - mock
 securityDefinitions:
   ApiKeyAuth:
     in: header
