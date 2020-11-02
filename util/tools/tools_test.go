@@ -90,11 +90,11 @@ func TestRandomTool(t *testing.T) {
 	t.Log(uuidArr[:10])
 	t.Logf("uuidArr 长度%d 重复次数: %d", len(uuidArr), n-len(RemoveDuplicateStr(uuidArr)))
 	t.Log(strArr[:10])
-	t.Logf("rangeStrArr 长度%d 重复次数: %d", len(strArr), n-len(RemoveDuplicateStr(strArr)))
+	t.Logf("strArr 长度%d 重复次数: %d", len(strArr), n-len(RemoveDuplicateStr(strArr)))
 	t.Log(codeArr[:10])
-	t.Logf("rangeCode 长度%d 重复次数: %d", len(codeArr), n-len(RemoveDuplicateStr(codeArr)))
+	t.Logf("codeArr 长度%d 重复次数: %d", len(codeArr), n-len(RemoveDuplicateStr(codeArr)))
 	t.Log(numArr[:10])
-	t.Logf("rangeNumArr 长度%d 重复次数: %d", len(numArr), n-len(RemoveDuplicateInt(numArr)))
+	t.Logf("numArr 长度%d 重复次数: %d", len(numArr), n-len(RemoveDuplicateInt(numArr)))
 }
 
 func TestRSATool(t *testing.T) {
