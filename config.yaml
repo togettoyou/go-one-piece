@@ -34,7 +34,7 @@ mysql:
   # 空闲连接池中连接的最大数量
   maxIdle: 10
   # 打开数据库连接的最大数量
-  maxOpen: 100
+  maxOpen: 10
   # 连接可复用的最大时间/单位分钟
   maxLifetime: 60
   # 数据库日志模式 silent,error,warn,info

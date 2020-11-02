@@ -8,7 +8,6 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
-	"time"
 )
 
 type Model struct {
@@ -69,21 +68,14 @@ func setConnectionPool() {
 			zap.L().Error(err.Error())
 			return
 		}
-		maxIdle := conf.Config.Mysql.MaxIdle
-		maxOpen := conf.Config.Mysql.MaxOpen
-		maxLifetime := conf.Config.Mysql.MaxLifetime
-		if maxIdle < 1 {
-			maxIdle = 10
+		sqlDB.SetMaxIdleConns(conf.Config.Mysql.MaxIdle)
+		sqlDB.SetMaxOpenConns(conf.Config.Mysql.MaxOpen)
+		sqlDB.SetConnMaxLifetime(conf.Config.Mysql.MaxLifetime)
+		err = sqlDB.Ping()
+		if err != nil {
+			zap.L().Error(err.Error())
+			return
 		}
-		if maxOpen < 1 {
-			maxOpen = 100
-		}
-		if maxLifetime < time.Second {
-			maxLifetime = 60 * time.Minute
-		}
-		sqlDB.SetMaxIdleConns(maxIdle)
-		sqlDB.SetMaxOpenConns(maxOpen)
-		sqlDB.SetConnMaxLifetime(maxLifetime)
 	}
 }
 
