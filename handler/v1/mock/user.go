@@ -55,7 +55,7 @@ func Registered(c *gin.Context) {
 	if !g.ParseJSONRequest(&body) {
 		return
 	}
-	salt := tools.RangeString(6)
+	salt := tools.NewRandom().String(6)
 	user := model.User{
 		Username:  body.Username,
 		Password:  tools.MD5V(body.Password + salt),

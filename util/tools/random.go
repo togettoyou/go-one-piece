@@ -5,6 +5,7 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"math/rand"
 	"strings"
+	"sync"
 	"time"
 )
 
@@ -17,32 +18,53 @@ func UUID(is ...bool) string {
 	return strings.Replace(fmt.Sprintf("%s", uuid.Must(uuid.NewV4(), nil)), "-", "", -1)
 }
 
+type random struct {
+	rnd  *rand.Rand
+	Lock sync.Mutex
+}
+
+func NewRandom() *random {
+	return &random{rnd: rand.New(rand.NewSource(time.Now().UnixNano()))}
+}
+
+var defaultLetters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
+
 //生成指定长度的随机字符串
-func RangeString(length int) string {
-	str := "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
-	bytes := []byte(str)
-	var result []byte
-	r := rand.New(rand.NewSource(time.Now().UnixNano()))
-	for i := 0; i < length; i++ {
-		result = append(result, bytes[r.Intn(len(bytes))])
+func (r *random) String(n int, allowedChars ...[]rune) string {
+	r.Lock.Lock()
+	defer r.Lock.Unlock()
+	var letters []rune
+	if len(allowedChars) == 0 {
+		letters = defaultLetters
+	} else {
+		letters = allowedChars[0]
 	}
-	return string(result)
+	b := make([]rune, n)
+	for i := range b {
+		r.rnd.Seed(time.Now().UnixNano())
+		b[i] = letters[r.rnd.Intn(len(letters))]
+	}
+	return string(b)
 }
 
 //生成指定长度的随机数字
-func RangeCode(length int) string {
+func (r *random) Code(length int) string {
+	r.Lock.Lock()
+	defer r.Lock.Unlock()
 	var container string
 	for i := 0; i < length; i++ {
-		rnd := rand.New(rand.NewSource(time.Now().UnixNano()))
-		container += fmt.Sprintf("%01v", rnd.Int31n(10))
+		r.rnd.Seed(time.Now().UnixNano())
+		container += fmt.Sprintf("%01v", r.rnd.Int31n(10))
 	}
 	return container
 }
 
 //生成指定范围内随机值
 //[min,max)
-func RangeNum(min, max int) int {
-	rand.Seed(time.Now().UnixNano())
-	randNum := rand.Intn(max-min) + min
+func (r *random) Num(min, max int) int {
+	r.Lock.Lock()
+	defer r.Lock.Unlock()
+	r.rnd.Seed(time.Now().UnixNano())
+	randNum := r.rnd.Intn(max-min) + min
 	return randNum
 }

@@ -20,15 +20,18 @@ func TestFileTool(t *testing.T) {
 }
 
 func TestFilterTool(t *testing.T) {
-	data := make([]string, 0)
+	dataStr := make([]string, 0)
+	dataInt := make([]int, 0)
 	for i := 0; i < 2; i++ {
-		for i := 0; i < 1000000; i++ {
-			data = append(data, strconv.Itoa(i))
+		for i := 0; i < 10000000; i++ {
+			dataStr = append(dataStr, strconv.Itoa(i))
+			dataInt = append(dataInt, i)
 		}
 	}
-	t.Logf("去重前长度: %d", len(data))
-	newData := RemoveRep(data)
-	t.Logf("去重后长度: %d", len(newData))
+	t.Logf("DataStr去重前长度: %d", len(dataStr))
+	t.Logf("DataInt去重前长度: %d", len(dataInt))
+	t.Logf("DataStr去重后长度: %d", len(RemoveDuplicateStr(dataStr)))
+	t.Logf("DataInt去重后长度: %d", len(RemoveDuplicateInt(dataInt)))
 }
 
 func TestFmtPlusTool(t *testing.T) {
@@ -58,26 +61,40 @@ func TestMD5Tool(t *testing.T) {
 	t.Log(MD5V("123456"))
 }
 
-// TODO
 func TestRandomTool(t *testing.T) {
-	rangeStrArr := make([]string, 0)
+	uuidArr := make([]string, 0)
+	strArr := make([]string, 0)
+	codeArr := make([]string, 0)
+	numArr := make([]int, 0)
 	var (
 		wg    sync.WaitGroup
 		mutex sync.Mutex
 	)
-	n := 100000
+	n := 200000
 	for i := 0; i < n; i++ {
 		wg.Add(1)
-		rangeString := RangeString(6)
 		go func() {
+			rangeString := NewRandom().String(6)
+			rangeCode := NewRandom().Code(6)
+			rangeNum := NewRandom().Num(100000, 999999)
 			mutex.Lock()
-			rangeStrArr = append(rangeStrArr, rangeString)
+			uuidArr = append(uuidArr, UUID())
+			strArr = append(strArr, rangeString)
+			codeArr = append(codeArr, rangeCode)
+			numArr = append(numArr, rangeNum)
 			mutex.Unlock()
 			wg.Done()
 		}()
 	}
 	wg.Wait()
-	t.Logf("rangeStrArr重复次数: %d", n-len(RemoveRep(rangeStrArr)))
+	t.Log(uuidArr[:10])
+	t.Logf("uuidArr 长度%d 重复次数: %d", len(uuidArr), n-len(RemoveDuplicateStr(uuidArr)))
+	t.Log(strArr[:10])
+	t.Logf("rangeStrArr 长度%d 重复次数: %d", len(strArr), n-len(RemoveDuplicateStr(strArr)))
+	t.Log(codeArr[:10])
+	t.Logf("rangeCode 长度%d 重复次数: %d", len(codeArr), n-len(RemoveDuplicateStr(codeArr)))
+	t.Log(numArr[:10])
+	t.Logf("rangeNumArr 长度%d 重复次数: %d", len(numArr), n-len(RemoveDuplicateInt(numArr)))
 }
 
 func TestRSATool(t *testing.T) {
