@@ -37,6 +37,8 @@ mysql:
   maxOpen: 100
   # 连接可复用的最大时间/单位分钟
   maxLifetime: 60
+  # 数据库日志模式 silent,error,warn,info
+  logMode: info
 
 # Redis配置
 redis:

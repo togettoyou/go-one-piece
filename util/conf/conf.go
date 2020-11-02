@@ -36,9 +36,10 @@ type logConfig struct {
 
 type mysql struct {
 	Dsn         string        `yaml:"dsn"`
-	MaxIdle     int           `json:"maxIdle"`
-	MaxOpen     int           `json:"maxOpen"`
-	MaxLifetime time.Duration `json:"maxLifetime"`
+	MaxIdle     int           `yaml:"maxIdle"`
+	MaxOpen     int           `yaml:"maxOpen"`
+	MaxLifetime time.Duration `yaml:"maxLifetime"`
+	LogMode     string        `yaml:"logMode"`
 }
 
 type redis struct {
