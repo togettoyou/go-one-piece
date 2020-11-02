@@ -35,7 +35,10 @@ type logConfig struct {
 }
 
 type mysql struct {
-	Dsn string `yaml:"dsn"`
+	Dsn         string        `yaml:"dsn"`
+	MaxIdle     int           `json:"maxIdle"`
+	MaxOpen     int           `json:"maxOpen"`
+	MaxLifetime time.Duration `json:"maxLifetime"`
 }
 
 type redis struct {
@@ -73,6 +76,7 @@ func setConfig() {
 	}
 	Config.Server.ReadTimeout *= time.Second
 	Config.Server.WriteTimeout *= time.Second
+	Config.Mysql.MaxLifetime *= time.Minute
 }
 
 func Reset() {

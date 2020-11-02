@@ -9,6 +9,7 @@ import (
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	"time"
 )
 
 type Model struct {
@@ -42,9 +43,37 @@ func Setup() {
 		zap.L().Error(err.Error())
 		return
 	}
+	setConnectionPool()
 	initTable(&User{})
+}
+
+// 设置连接池
+func setConnectionPool() {
+	if db != nil {
+		sqlDB, err := db.DB()
+		if err != nil {
+			zap.L().Error(err.Error())
+			return
+		}
+		maxIdle := conf.Config.Mysql.MaxIdle
+		maxOpen := conf.Config.Mysql.MaxOpen
+		maxLifetime := conf.Config.Mysql.MaxLifetime
+		if maxIdle < 1 {
+			maxIdle = 10
+		}
+		if maxOpen < 1 {
+			maxOpen = 100
+		}
+		if maxLifetime < time.Second {
+			maxLifetime = 60 * time.Minute
+		}
+		sqlDB.SetMaxIdleConns(maxIdle)
+		sqlDB.SetMaxOpenConns(maxOpen)
+		sqlDB.SetConnMaxLifetime(maxLifetime)
+	}
 }
 
 func Reset() {
 	db.Config.Logger = logger.Default.LogMode(level())
+	setConnectionPool()
 }
