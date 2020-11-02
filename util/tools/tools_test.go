@@ -1,6 +1,8 @@
 package tools
 
 import (
+	"github.com/go-playground/validator/v10"
+	myValidator "go-one-server/util/validator"
 	"strconv"
 	"sync"
 	"testing"
@@ -119,4 +121,21 @@ func TestRSATool(t *testing.T) {
 
 func TestTimesTool(t *testing.T) {
 	t.Log(time.Now().Format(TimeFormat))
+}
+
+// TODO
+func TestValidator(t *testing.T) {
+	myValidator.Setup()
+	data1 := "zoujh99@qq.com"
+	data2 := "qq.com"
+	data3 := "1user"
+	if err := myValidator.GetV().Var(data1, "required,email"); err != nil {
+		t.Log(data1, err)
+	}
+	if err := myValidator.GetV().Var(data2, "required,email"); err != nil {
+		t.Log(data2, err)
+	}
+	if err := myValidator.GetV().Var(data3, "required,checkUsername"); err != nil {
+		t.Log(myValidator.TranslateErrMsg(err.(validator.ValidationErrors)))
+	}
 }

@@ -17,6 +17,10 @@ var (
 	trans ut.Translator
 )
 
+func GetV() *validator.Validate {
+	return v
+}
+
 // 定制gin内置的validator
 func Setup() {
 	var ok bool
