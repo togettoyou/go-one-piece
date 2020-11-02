@@ -49,9 +49,9 @@ func main() {
 		return
 	}
 	setup()
+	startServer()
 	reload := make(chan int, 1)
 	conf.OnConfigChange(func() { reload <- 1 })
-	startServer()
 	for {
 		select {
 		case <-reload:

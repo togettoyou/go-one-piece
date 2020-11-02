@@ -31,9 +31,14 @@ func JWT() gin.HandlerFunc {
 				case jwt.ValidationErrorExpired:
 					g.SendNoDataResponse(errno.ErrTokenExpired)
 					break
+				default:
+					g.SendNoDataResponse(errno.ErrTokenInvalid)
+					break
 				}
+				c.Abort()
+				return
 			}
-			g.SendNoDataResponse(errno.ErrTokenInvalid)
+			g.SendNoDataResponse(errno.New(errno.ErrTokenFailure, err).Add(err.Error()))
 			c.Abort()
 			return
 		}

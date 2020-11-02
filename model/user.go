@@ -68,6 +68,7 @@ func FindUser(username string) (*User, error) {
 	return &user, nil
 }
 
+// 分页获取用户列表
 func GetUserList(page, pageSize int) (data *PaginationQ, err error) {
 	q := PaginationQ{
 		PageSize: pageSize,

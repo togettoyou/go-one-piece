@@ -38,7 +38,7 @@ func GetUserList(c *gin.Context) {
 type RegisteredBody struct {
 	Username  string `json:"username" binding:"required,checkUsername"`
 	Password  string `json:"password" binding:"required"`
-	NickName  string `json:"nick_name"`
+	NickName  string `json:"nick_name" binding:"omitempty,max=16"`
 	HeaderImg string `json:"header_img" binding:"omitempty,url"`
 }
 
@@ -112,7 +112,7 @@ func GetUserInfo(c *gin.Context) {
 }
 
 type UserInfoBody struct {
-	NickName  string `json:"nick_name" binding:"omitempty"`
+	NickName  string `json:"nick_name" binding:"omitempty,max=16"`
 	HeaderImg string `json:"header_img" binding:"omitempty,url"`
 }
 
