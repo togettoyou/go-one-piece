@@ -14,7 +14,7 @@ func Reset() {
 	logger.Reset()
 	model.Reset()
 	resetGinMode()
-	zap.S().Info("config change", conf.Config)
+	zap.L().Info("Hot reload config.")
 }
 
 const (
