@@ -56,12 +56,20 @@ func Setup() {
 		zap.L().Error(err.Error())
 		return
 	}
-	setConnectionPool()
-	initTable(&User{})
+	connectionPool()
+	autoMigrate(&User{})
+}
+
+func autoMigrate(tables ...interface{}) {
+	if err := db.Set("gorm:table_options",
+		"ENGINE=InnoDB DEFAULT CHARSET=utf8").
+		AutoMigrate(tables...); err != nil {
+		zap.L().Error(err.Error())
+	}
 }
 
 // 设置连接池
-func setConnectionPool() {
+func connectionPool() {
 	if db != nil {
 		sqlDB, err := db.DB()
 		if err != nil {
@@ -81,5 +89,5 @@ func setConnectionPool() {
 
 func Reset() {
 	db.Config.Logger = logger.Default.LogMode(level())
-	setConnectionPool()
+	connectionPool()
 }
