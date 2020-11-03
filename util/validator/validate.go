@@ -17,8 +17,18 @@ var (
 	trans ut.Translator
 )
 
-func GetV() *validator.Validate {
+func V() *validator.Validate {
 	return v
+}
+
+func E(err error) (string, bool) {
+	if err != nil {
+		if errors, ok := err.(validator.ValidationErrors); ok {
+			return TranslateErrMsg(errors), false
+		}
+		return err.Error(), false
+	}
+	return "", true
 }
 
 // 定制gin内置的validator
