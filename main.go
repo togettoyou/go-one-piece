@@ -32,7 +32,7 @@ var (
 
 // @title go-one-server
 // @version 1.0
-// @description 基于Gin进行快速构建RESTful API 服务的脚手架
+// @description 基于Gin进行快速构建RESTful API 服务的项目模板
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
