@@ -1,5 +1,5 @@
 # 定义伪目标。不创建目标文件，而是去执行这个目标下面的命令。
-.PHONY: all doc linux linux-doc run gotool clean help
+.PHONY: all docs linux linux-docs run gotool clean help
 
 # 生成的二进制文件名
 BINARY_NAME="go-one-server"
@@ -16,19 +16,19 @@ ldflags="-w -X ${versionDir}.gitTag=${gitTag} -X ${versionDir}.buildDate=${build
 all: gotool clean
 	go build -v -ldflags ${ldflags} -o ${BINARY_NAME} .
 
-doc: gotool clean
-	go build -tags "doc" -v -ldflags ${ldflags} -o ${BINARY_NAME} .
+docs: gotool clean
+	go build -tags "docs" -v -ldflags ${ldflags} -o ${BINARY_NAME} .
 
 # 交叉编译linux amd64版本
 linux: gotool clean
 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -ldflags ${ldflags} -o ${BINARY_NAME} .
 
-linux-doc: gotool clean
-	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags "doc" -v -ldflags ${ldflags} -o ${BINARY_NAME} .
+linux-docs: gotool clean
+	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -tags "docs" -v -ldflags ${ldflags} -o ${BINARY_NAME} .
 
 # 运行项目
 run:
-	@go run -tags "doc" ./
+	@go run -tags "docs" ./
 
 # gotool工具
 gotool:
@@ -44,9 +44,9 @@ clean:
 # 帮助
 help:
 	@echo "make - 编译生成当前平台可运行的二进制文件(不带swagger文档)"
-	@echo "make doc - 编译生成当前平台可运行的二进制文件(带swagger文档)"
+	@echo "make docs - 编译生成当前平台可运行的二进制文件(带swagger文档)"
 	@echo "make linux - 交叉编译生成linux amd64可运行的二进制文件(不带swagger文档)"
-	@echo "make linux-doc - 交叉编译生成linux amd64可运行的二进制文件(带swagger文档)"
+	@echo "make linux-docs - 交叉编译生成linux amd64可运行的二进制文件(带swagger文档)"
 	@echo "make run - 直接运行 Go 代码(带swagger文档)"
 	@echo "make gotool - 运行 Go 工具 'fmt' and 'vet'"
 	@echo "make clean - 清理编译生成的二进制文件"

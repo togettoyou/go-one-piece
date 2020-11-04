@@ -1,4 +1,4 @@
-// +build doc
+// +build docs
 
 package router
 

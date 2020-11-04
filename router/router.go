@@ -10,6 +10,10 @@ import (
 
 var swagHandler gin.HandlerFunc
 
+func HasDocs() bool {
+	return swagHandler != nil
+}
+
 func InitRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Recovery())
@@ -18,7 +22,7 @@ func InitRouter() *gin.Engine {
 	//debug模式开启性能分析
 	pprof.Register(r)
 	//swagger文档，根据build tag控制编译减少二进制文件大小
-	if swagHandler != nil {
+	if HasDocs() {
 		r.GET("/swagger/*any", swagHandler)
 	}
 	//api路由分组v1版本

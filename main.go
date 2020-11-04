@@ -78,12 +78,14 @@ func startServer() {
 			panic(err)
 		}
 	}()
-	fmt.Printf(`swagger文档地址：http://localhost%s/swagger/index.html
+	if router.HasDocs() {
+		fmt.Printf(`swagger文档地址：http://%s%s/swagger/index.html
    ____   ____             ____   ____   ____             ______ ______________  __ ___________ 
   / ___\ /  _ \   ______  /  _ \ /    \_/ __ \   ______  /  ___// __ \_  __ \  \/ // __ \_  __ \
  / /_/  >  <_> ) /_____/ (  <_> )   |  \  ___/  /_____/  \___ \\  ___/|  | \/\   /\  ___/|  | \/
  \___  / \____/           \____/|___|  /\___  >         /____  >\___  >__|    \_/  \___  >__|   
 /_____/                              \/     \/               \/     \/                 \/       
 
-`, httpPort)
+`, tools.GetCurrentIP().String(), httpPort)
+	}
 }

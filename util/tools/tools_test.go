@@ -120,3 +120,8 @@ func TestRSATool(t *testing.T) {
 func TestTimesTool(t *testing.T) {
 	t.Log(time.Now().Format(TimeFormat))
 }
+
+func TestHost(t *testing.T) {
+	ip := GetCurrentIP()
+	t.Log(ip.String())
+}
