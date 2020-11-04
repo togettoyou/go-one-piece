@@ -19,7 +19,8 @@ func InitRouter() *gin.Engine {
 	r.Use(gin.Recovery())
 	r.Use(cors.Default())
 	r.Use(middleware.Logger())
-	//debug模式开启性能分析
+	//开启性能分析
+	//实际可以根据需要使用pprof.RouteRegister()控制访问权限
 	pprof.Register(r)
 	//swagger文档，根据build tag控制编译减少二进制文件大小
 	if HasDocs() {
