@@ -4,12 +4,11 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
-	"github.com/swaggo/gin-swagger"
-	"github.com/swaggo/gin-swagger/swaggerFiles"
-	_ "go-one-server/docs"
 	"go-one-server/handler/v1/mock"
 	"go-one-server/router/middleware"
 )
+
+var swagHandler gin.HandlerFunc
 
 func InitRouter() *gin.Engine {
 	r := gin.New()
@@ -18,8 +17,10 @@ func InitRouter() *gin.Engine {
 	r.Use(middleware.Logger())
 	//debug模式开启性能分析
 	pprof.Register(r)
-	//swagger文档
-	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+	//swagger文档，根据build tag控制编译减少二进制文件大小
+	if swagHandler != nil {
+		r.GET("/swagger/*any", swagHandler)
+	}
 	//api路由分组v1版本
 	apiV1 := r.Group("/api/v1")
 	initMockRouter(apiV1)
