@@ -4,6 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
+// 分页结构体
 type PaginationQ struct {
 	//每页显示的数量
 	PageSize int `json:"page_size"`
@@ -15,19 +16,23 @@ type PaginationQ struct {
 	Total int64 `json:"total"`
 }
 
-// 分页扫描器
-func (p *PaginationQ) PaginateScan(queryTx *gorm.DB) (data *PaginationQ, err error) {
-	err = queryTx.Count(&p.Total).Error
-	if err != nil {
-		return p, err
+// 通用计数
+func Count(total *int64) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		return db.Count(total)
 	}
-	switch {
-	case p.PageSize > 100:
-		p.PageSize = 100
-	case p.PageSize < 1:
-		p.PageSize = 1
+}
+
+// 通用分页
+func Paginate(page, pageSize int) func(db *gorm.DB) *gorm.DB {
+	return func(db *gorm.DB) *gorm.DB {
+		switch {
+		case pageSize > 100:
+			pageSize = 100
+		case pageSize <= 0:
+			pageSize = 10
+		}
+		offset := (page - 1) * pageSize
+		return db.Offset(offset).Limit(pageSize)
 	}
-	offset := (p.Page - 1) * p.PageSize
-	err = queryTx.Offset(offset).Limit(p.PageSize).Scan(p.Data).Error
-	return p, err
 }

@@ -64,8 +64,13 @@ func (g *Gin) OkCustomResponse(msg string, data interface{}) {
 	})
 }
 
-func (g *Gin) HasError(err error) bool {
+// hideDetails可选择隐藏错误详细信息
+func (g *Gin) HasError(err error, hideDetails ...bool) bool {
 	if err != nil {
+		if len(hideDetails) > 0 && hideDetails[0] {
+			g.SendNoDataResponse(errno.ErrUnknown)
+			return true
+		}
 		g.SendNoDataResponse(err)
 		return true
 	}

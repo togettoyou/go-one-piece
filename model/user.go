@@ -71,10 +71,16 @@ func FindUser(username string) (*User, error) {
 
 // 分页获取用户列表
 func GetUserList(page, pageSize int) (data *PaginationQ, err error) {
-	q := PaginationQ{
+	var users []*User
+	var total int64
+	err = db.Model(&User{}).Scopes(Count(&total)).Scopes(Paginate(page, pageSize)).Find(&users).Error
+	if err != nil {
+		return nil, err
+	}
+	return &PaginationQ{
 		PageSize: pageSize,
 		Page:     page,
-		Data:     &[]User{},
-	}
-	return q.PaginateScan(db.Model(&User{}))
+		Data:     users,
+		Total:    total,
+	}, nil
 }

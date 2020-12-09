@@ -11,7 +11,7 @@ server:
   readTimeout: 60
   writeTimeout: 60
   # 端口
-  httpPort: 9999
+  httpPort: 8888
 
 # 日志配置
 logConfig:
