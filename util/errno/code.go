@@ -7,19 +7,20 @@ package errno
 
 var (
 	// Common errors
-	OK                  = &Errno{Code: 0, Message: "OK"}
-	InternalServerError = &Errno{Code: 10001, Message: "Internal server error"}
-	ErrBind             = &Errno{Code: 10002, Message: "Error occurred while binding the request body to the struct."}
-	ErrUnknown          = &Errno{Code: 10003, Message: "Unknown Error"}
+	OK                  = &Errno{Code: 0, Message: "成功"}
+	InternalServerError = &Errno{Code: 10001, Message: "服务器异常"}
+	ErrBind             = &Errno{Code: 10002, Message: "参数绑定异常"}
+	ErrUnknown          = &Errno{Code: 10003, Message: "未知错误"}
 
-	ErrValidation   = &Errno{Code: 20001, Message: "Validation failed."}
-	ErrNotLogin     = &Errno{Code: 20002, Message: "Please login."}
-	ErrTokenExpired = &Errno{Code: 20003, Message: "The token was expired."}
-	ErrTokenInvalid = &Errno{Code: 20004, Message: "The token was invalid."}
-	ErrTokenFailure = &Errno{Code: 20005, Message: "The token validation failure."}
+	ErrValidation   = &Errno{Code: 20001, Message: "参数校验失败"}
+	ErrNotLogin     = &Errno{Code: 20002, Message: "请登录"}
+	ErrTokenExpired = &Errno{Code: 20003, Message: "令牌已过期"}
+	ErrTokenInvalid = &Errno{Code: 20004, Message: "令牌无效"}
+	ErrTokenFailure = &Errno{Code: 20005, Message: "令牌验证失败"}
+	ErrPermission   = &Errno{Code: 20006, Message: "权限不足"}
 
 	// user errors
-	ErrUserNotFound      = &Errno{Code: 20101, Message: "The user was not found."}
-	ErrUserExisting      = &Errno{Code: 20102, Message: "The user already exists."}
-	ErrPasswordIncorrect = &Errno{Code: 20103, Message: "The password was incorrect."}
+	ErrUserNotFound      = &Errno{Code: 20101, Message: "用户不存在"}
+	ErrUserExisting      = &Errno{Code: 20102, Message: "用户已存在"}
+	ErrPasswordIncorrect = &Errno{Code: 20103, Message: "密码不正确"}
 )

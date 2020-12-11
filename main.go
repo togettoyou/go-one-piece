@@ -7,6 +7,7 @@ import (
 	"github.com/spf13/pflag"
 	"go-one-server/model"
 	"go-one-server/router"
+	"go-one-server/service"
 	"go-one-server/util"
 	"go-one-server/util/conf"
 	"go-one-server/util/logger"
@@ -24,6 +25,7 @@ func setup() {
 	logger.Setup()
 	validator.Setup()
 	model.Setup()
+	service.Setup()
 }
 
 var (

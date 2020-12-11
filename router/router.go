@@ -34,6 +34,7 @@ func InitRouter() *gin.Engine {
 
 func initExamplesRouter(api *gin.RouterGroup) {
 	examplesRouterGroup := api.Group("/examples")
+	examplesRouterGroup.Use(middleware.CasbinRBAC())
 	{
 		examplesRouterGroup.GET("/get", v1.Get)
 		examplesRouterGroup.GET("/uri/:id", v1.Uri)
