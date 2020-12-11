@@ -3,6 +3,7 @@
 
 # 生成的二进制文件名
 BINARY_NAME="go-one-server"
+TARGET=$(out)
 
 # 编译添加版本信息
 versionDir = "${BINARY_NAME}/util/version"
@@ -28,7 +29,7 @@ linux-docs: gotool clean
 
 # 运行项目
 run:
-	@go run -tags "docs" ./
+	go run -tags "docs" main.go $(TARGET)
 
 # gotool工具
 gotool:
@@ -47,6 +48,6 @@ help:
 	@echo "make docs - 编译生成当前平台可运行的二进制文件(带swagger文档)"
 	@echo "make linux - 交叉编译生成linux amd64可运行的二进制文件(不带swagger文档)"
 	@echo "make linux-docs - 交叉编译生成linux amd64可运行的二进制文件(带swagger文档)"
-	@echo "make run - 直接运行 Go 代码(带swagger文档)"
+	@echo "make run - 直接运行 Go 代码(带swagger文档)\nmake run out='-c config.yaml' - 指定配置文件"
 	@echo "make gotool - 运行 Go 工具 'fmt' and 'vet'"
 	@echo "make clean - 清理编译生成的二进制文件"

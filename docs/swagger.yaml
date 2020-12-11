@@ -25,7 +25,7 @@ info:
   title: go-one-server
   version: "1.0"
 paths:
-  /api/v1/mock/form:
+  /api/v1/examples/form:
     post:
       consumes:
       - application/x-www-form-urlencoded
@@ -49,8 +49,8 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: form表单请求
       tags:
-      - mock
-  /api/v1/mock/get:
+      - examples
+  /api/v1/examples/get:
     get:
       produces:
       - application/json
@@ -65,8 +65,8 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: Get请求
       tags:
-      - mock
-  /api/v1/mock/json:
+      - examples
+  /api/v1/examples/json:
     post:
       description: 邮箱、用户名校验
       parameters:
@@ -89,8 +89,8 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: JSON参数请求
       tags:
-      - mock
-  /api/v1/mock/query:
+      - examples
+  /api/v1/examples/query:
     get:
       description: 查询参数，匹配 query?id=xxx
       parameters:
@@ -112,8 +112,8 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: query参数查询
       tags:
-      - mock
-  /api/v1/mock/query/array:
+      - examples
+  /api/v1/examples/query/array:
     get:
       description: 数组参数，匹配多选业务如 array?ids=xxx&ids=xxx&ids=xxx,key一样，value不同
       produces:
@@ -129,8 +129,8 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: queryArray参数查询
       tags:
-      - mock
-  /api/v1/mock/query/map:
+      - examples
+  /api/v1/examples/query/map:
     get:
       description: map参数，字典参数，匹配 map?ids[a]=123&ids[b]=456&ids[c]=789
       produces:
@@ -146,8 +146,8 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: queryMap参数查询
       tags:
-      - mock
-  /api/v1/mock/uri/{id}:
+      - examples
+  /api/v1/examples/uri/{id}:
     get:
       description: 路径参数，匹配 /uri/{id}
       parameters:
@@ -168,7 +168,7 @@ paths:
             $ref: '#/definitions/handler.Response'
       summary: uri参数请求
       tags:
-      - mock
+      - examples
 securityDefinitions:
   ApiKeyAuth:
     in: header
