@@ -8,7 +8,7 @@ definitions:
       msg:
         type: string
     type: object
-  mock.JSONBody:
+  v1.JSONBody:
     properties:
       email:
         type: string
@@ -17,37 +17,6 @@ definitions:
     required:
     - email
     - username
-    type: object
-  mock.LoginBody:
-    properties:
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  mock.RegisteredBody:
-    properties:
-      header_img:
-        type: string
-      nick_name:
-        type: string
-      password:
-        type: string
-      username:
-        type: string
-    required:
-    - password
-    - username
-    type: object
-  mock.UserInfoBody:
-    properties:
-      header_img:
-        type: string
-      nick_name:
-        type: string
     type: object
 info:
   contact: {}
@@ -106,7 +75,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/mock.JSONBody'
+          $ref: '#/definitions/v1.JSONBody'
       produces:
       - application/json
       responses:
@@ -121,29 +90,6 @@ paths:
       summary: JSON参数请求
       tags:
       - mock
-  /api/v1/mock/login:
-    post:
-      parameters:
-      - description: 登录信息
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/mock.LoginBody'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handler.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.Response'
-      summary: 用户登录
-      tags:
-      - mock用户
   /api/v1/mock/query:
     get:
       description: 查询参数，匹配 query?id=xxx
@@ -201,29 +147,6 @@ paths:
       summary: queryMap参数查询
       tags:
       - mock
-  /api/v1/mock/registered:
-    post:
-      parameters:
-      - description: 注册信息
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/mock.RegisteredBody'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handler.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.Response'
-      summary: 用户注册
-      tags:
-      - mock用户
   /api/v1/mock/uri/{id}:
     get:
       description: 路径参数，匹配 /uri/{id}
@@ -246,73 +169,6 @@ paths:
       summary: uri参数请求
       tags:
       - mock
-  /api/v1/mock/userInfo:
-    get:
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handler.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: 用户查看信息
-      tags:
-      - mock用户
-    patch:
-      parameters:
-      - description: 修改信息
-        in: body
-        name: data
-        required: true
-        schema:
-          $ref: '#/definitions/mock.UserInfoBody'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handler.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: 用户修改信息
-      tags:
-      - mock用户
-  /api/v1/mock/userList:
-    get:
-      parameters:
-      - description: 页码
-        in: query
-        name: page
-        type: integer
-      - description: 页面大小
-        in: query
-        name: page_size
-        type: integer
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handler.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.Response'
-      summary: 分页获取用户列表
-      tags:
-      - mock用户
 securityDefinitions:
   ApiKeyAuth:
     in: header

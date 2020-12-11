@@ -4,7 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
-	"go-one-server/handler/v1/mock"
+	v1 "go-one-server/handler/v1"
 	"go-one-server/router/middleware"
 )
 
@@ -28,26 +28,19 @@ func InitRouter() *gin.Engine {
 	}
 	//api路由分组v1版本
 	apiV1 := r.Group("/api/v1")
-	initMockRouter(apiV1)
+	initExamplesRouter(apiV1)
 	return r
 }
 
-func initMockRouter(api *gin.RouterGroup) {
-	mockRouterGroup := api.Group("/mock")
+func initExamplesRouter(api *gin.RouterGroup) {
+	examplesRouterGroup := api.Group("/examples")
 	{
-		mockRouterGroup.GET("/get", mock.Get)
-		mockRouterGroup.GET("/uri/:id", mock.Uri)
-		mockRouterGroup.GET("/query", mock.Query)
-		mockRouterGroup.POST("/form", mock.FormData)
-		mockRouterGroup.POST("/json", mock.JSON)
-		mockRouterGroup.GET("/query/array", mock.QueryArray)
-		mockRouterGroup.GET("/query/map", mock.QueryMap)
-	}
-	{
-		mockRouterGroup.GET("/userList", mock.GetUserList)
-		mockRouterGroup.POST("/registered", mock.Registered)
-		mockRouterGroup.POST("/login", mock.Login)
-		mockRouterGroup.GET("/userInfo", middleware.JWT(), mock.GetUserInfo)
-		mockRouterGroup.PATCH("/userInfo", middleware.JWT(), mock.UpdateUserInfo)
+		examplesRouterGroup.GET("/get", v1.Get)
+		examplesRouterGroup.GET("/uri/:id", v1.Uri)
+		examplesRouterGroup.GET("/query", v1.Query)
+		examplesRouterGroup.POST("/form", v1.FormData)
+		examplesRouterGroup.POST("/json", v1.JSON)
+		examplesRouterGroup.GET("/query/array", v1.QueryArray)
+		examplesRouterGroup.GET("/query/map", v1.QueryMap)
 	}
 }

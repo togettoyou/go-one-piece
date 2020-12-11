@@ -19,6 +19,10 @@ type Model struct {
 
 var db *gorm.DB
 
+func DB() *gorm.DB {
+	return db
+}
+
 var logMode = map[string]logger.LogLevel{
 	"silent": logger.Silent,
 	"error":  logger.Error,
@@ -57,7 +61,6 @@ func Setup() {
 		return
 	}
 	connectionPool()
-	autoMigrate(&User{})
 }
 
 func autoMigrate(tables ...interface{}) {

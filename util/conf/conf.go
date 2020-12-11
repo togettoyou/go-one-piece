@@ -52,12 +52,12 @@ var (
 	v      *viper.Viper
 )
 
-const defaultConfigFile = "config.yaml"
+var DefaultConfigFile string
 
 // 初始化读取配置文件
 func Setup() {
 	v = viper.New()
-	v.SetConfigFile(defaultConfigFile)
+	v.SetConfigFile(DefaultConfigFile)
 	if err := v.ReadInConfig(); err != nil {
 		panic(err)
 	}

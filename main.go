@@ -27,7 +27,8 @@ func setup() {
 }
 
 var (
-	v = pflag.BoolP("version", "v", false, "show version info.")
+	v      = pflag.BoolP("version", "v", false, "显示版本信息")
+	config = pflag.StringP("config", "c", "config.yaml", "指定配置文件路径")
 )
 
 // @title go-one-server
@@ -48,6 +49,7 @@ func main() {
 		fmt.Println(string(marshalled))
 		return
 	}
+	conf.DefaultConfigFile = *config
 	setup()
 	startServer()
 	reload := make(chan int, 1)
