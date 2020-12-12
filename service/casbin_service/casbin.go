@@ -62,32 +62,60 @@ func Casbin() *casbin.Enforcer {
 	return enforcer
 }
 
-// 获取角色权限列表
-func GetPolicyPathByRoleID(roleID string) []model.CasbinInfo {
-	pathMaps := make([]model.CasbinInfo, 0)
+// 获取用户的角色ID
+func GetRoleByUser(username string) (string, error) {
 	e := Casbin()
+	roles, err := e.GetRolesForUser(username)
+	//policy := e.GetFilteredNamedPolicy("g", 0, username)
+	//zap.S().Info(policy)
+	if err != nil {
+		return "", err
+	}
+	if len(roles) < 1 {
+		return "", errno.ErrUserRoleNotFound
+	}
+	return roles[0], nil
+}
+
+// 设置用户角色
+func SetUserRole(username, roleID, roleName string) error {
+	e := Casbin()
+	// 本系统只支持一个用户一个角色，所以先删除再增加
+	_, err := e.DeleteRolesForUser(username)
+	if err != nil {
+		return err
+	}
+	success, err := e.AddRoleForUser(username, roleID, roleName)
+	if err != nil {
+		return err
+	}
+	if success == false {
+		return errno.ErrSetCasbinUserRole
+	}
+	return nil
+}
+
+// 获取角色权限列表
+func GetApiByRoleID(roleID string) []model.CasbinRoleApiInfo {
+	e := Casbin()
+	pathMaps := make([]model.CasbinRoleApiInfo, 0)
 	list := e.GetFilteredPolicy(0, roleID)
 	for _, v := range list {
-		pathMaps = append(pathMaps, model.CasbinInfo{
+		pathMaps = append(pathMaps, model.CasbinRoleApiInfo{
 			Path:   v[1],
 			Method: v[2],
+			ApiDes: v[3],
 		})
 	}
 	return pathMaps
 }
 
 // 更新角色权限
-func UpdateCasbin(casbinInReceive model.CasbinInReceive) error {
-	ClearCasbin(0, casbinInReceive.RoleID)
+func UpdateRoleApi(roleID string, casbinInfos []model.CasbinRoleApiInfo) error {
+	ClearCasbin(0, roleID)
 	var rules [][]string
-	for _, v := range casbinInReceive.CasbinInfos {
-		c := model.Casbin{
-			PType:  "p",
-			RoleID: casbinInReceive.RoleID,
-			Path:   v.Path,
-			Method: v.Method,
-		}
-		rules = append(rules, []string{c.RoleID, c.Path, c.Method})
+	for _, v := range casbinInfos {
+		rules = append(rules, []string{roleID, v.Path, v.Method, v.ApiDes})
 	}
 	e := Casbin()
 	success, err := e.AddPolicies(rules)
@@ -95,7 +123,7 @@ func UpdateCasbin(casbinInReceive model.CasbinInReceive) error {
 		return err
 	}
 	if success == false {
-		return errno.ErrUpdateCasbin
+		return errno.ErrUpdateCasbinRoleApi
 	}
 	return nil
 }

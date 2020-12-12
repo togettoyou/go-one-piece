@@ -66,10 +66,11 @@ func initRoleRouter(api *gin.RouterGroup) {
 }
 
 func initCasbinRouter(api *gin.RouterGroup) {
-	userRouterGroup := api.Group("/casbin")
-	userRouterGroup.Use(middleware.JWT()).Use(middleware.CasbinRBAC())
+	casbinRouterGroup := api.Group("/casbin")
+	casbinRouterGroup.Use(middleware.JWT()).Use(middleware.CasbinRBAC())
 	{
-		userRouterGroup.GET("/:roleID", v1.GetAllCasbin)
-		userRouterGroup.PUT("", v1.UpdateCasbin)
+		casbinRouterGroup.POST("/setUserRole", v1.SetUserRole)
+		casbinRouterGroup.GET("/api/:roleID", v1.GetAllCasbinApi)
+		casbinRouterGroup.PUT("/api/:roleID", v1.UpdateCasbinApi)
 	}
 }

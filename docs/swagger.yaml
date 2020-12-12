@@ -8,21 +8,19 @@ definitions:
       msg:
         type: string
     type: object
-  model.CasbinInReceive:
+  model.CasbinRoleApiInfo:
     properties:
-      casbinInfos:
-        items:
-          $ref: '#/definitions/model.CasbinInfo'
-        type: array
-      role_id:
+      api_des:
         type: string
-    type: object
-  model.CasbinInfo:
-    properties:
       method:
+        example: '*'
         type: string
       path:
+        example: /*
         type: string
+    required:
+    - method
+    - path
     type: object
   v1.JSONBody:
     properties:
@@ -36,11 +34,12 @@ definitions:
     type: object
   v1.casbinBody:
     properties:
-      casbin_in_receive:
-        $ref: '#/definitions/model.CasbinInReceive'
-        type: object
+      casbin_role_api_info:
+        items:
+          $ref: '#/definitions/model.CasbinRoleApiInfo'
+        type: array
     required:
-    - casbin_in_receive
+    - casbin_role_api_info
     type: object
   v1.loginBody:
     properties:
@@ -62,9 +61,6 @@ definitions:
       remark:
         example: 备注
         type: string
-      role_id:
-        example: 角色ID(可选)
-        type: string
       username:
         example: user1
         type: string
@@ -80,6 +76,18 @@ definitions:
     required:
     - role_name
     type: object
+  v1.userRoleBody:
+    properties:
+      roleID:
+        example: roleID
+        type: string
+      username:
+        example: user1
+        type: string
+    required:
+    - roleID
+    - username
+    type: object
 info:
   contact: {}
   description: 基于Gin进行快速构建RESTful API 服务的项目模板
@@ -87,9 +95,37 @@ info:
   title: go-one-server
   version: "1.0"
 paths:
-  /api/v1/casbin:
+  /api/v1/casbin/api/{roleID}:
+    get:
+      parameters:
+      - description: 角色ID
+        in: path
+        name: roleID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 根据角色获取权限列表
+      tags:
+      - casbin
     put:
       parameters:
+      - description: 角色ID
+        in: path
+        name: roleID
+        required: true
+        type: string
       - description: 权限信息
         in: body
         name: data
@@ -112,14 +148,15 @@ paths:
       summary: 更新角色权限
       tags:
       - casbin
-  /api/v1/casbin/{roleID}:
-    get:
+  /api/v1/casbin/setUserRole:
+    post:
       parameters:
-      - description: 角色ID
-        in: path
-        name: roleID
+      - description: 用户角色信息
+        in: body
+        name: data
         required: true
-        type: string
+        schema:
+          $ref: '#/definitions/v1.userRoleBody'
       produces:
       - application/json
       responses:
@@ -133,7 +170,7 @@ paths:
             $ref: '#/definitions/handler.Response'
       security:
       - ApiKeyAuth: []
-      summary: 根据角色获取权限列表
+      summary: 设置用户角色
       tags:
       - casbin
   /api/v1/examples/form:

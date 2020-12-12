@@ -16,11 +16,10 @@ var jwtSecret = func() string {
 type Claims struct {
 	jwt.StandardClaims
 	Username string
-	RoleID   string
 	// 更多自行拓展
 }
 
-func GenerateJWT(username, roleID string, minute ...int) (string, error) {
+func GenerateJWT(username string, minute ...int) (string, error) {
 	nowTime := time.Now()
 	var expireTime time.Time
 	if len(minute) > 0 {
@@ -36,7 +35,6 @@ func GenerateJWT(username, roleID string, minute ...int) (string, error) {
 			Subject:   "go-one-server",   // 主题
 		},
 		Username: username,
-		RoleID:   roleID,
 	}
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := tokenClaims.SignedString([]byte(jwtSecret()))

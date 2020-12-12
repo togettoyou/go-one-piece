@@ -11,8 +11,12 @@ type Role struct {
 	CreatedAt tools.FormatTime `json:"created_at"`
 	UpdatedAt tools.FormatTime `json:"-"`
 	DeletedAt gorm.DeletedAt   `json:"-" gorm:"index"`
-	RoleID    string           `json:"role_id" gorm:"unique;not null;primarykey;type:varchar(32);comment:角色ID"`
-	RoleName  string           `json:"role_name" gorm:"unique;not null;type:varchar(20);comment:角色名字"`
+	RoleInfo
+}
+
+type RoleInfo struct {
+	RoleID   string `json:"role_id" gorm:"unique;not null;primarykey;type:varchar(32);comment:角色ID"`
+	RoleName string `json:"role_name" gorm:"unique;not null;type:varchar(20);comment:角色名字"`
 }
 
 func (r *Role) BeforeCreate(tx *gorm.DB) error {
@@ -21,7 +25,9 @@ func (r *Role) BeforeCreate(tx *gorm.DB) error {
 	if count > 0 {
 		return errno.ErrRoleExisting
 	}
-	r.RoleID = tools.UUID()
+	if r.RoleID == "" {
+		r.RoleID = tools.UUID()
+	}
 	return nil
 }
 
@@ -42,4 +48,16 @@ func GetRoleList(page, pageSize int) (data *PaginationQ, err error) {
 		Data:     roles,
 		Total:    total,
 	}, nil
+}
+
+func FindRole(roleID string) (*Role, error) {
+	var role Role
+	if err := db.Where(map[string]interface{}{"role_id": roleID}).
+		Take(&role).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, errno.ErrRoleNotFound
+		}
+		return nil, err
+	}
+	return &role, nil
 }

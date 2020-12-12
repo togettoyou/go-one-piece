@@ -2,6 +2,7 @@ package user_service
 
 import (
 	"go-one-server/model"
+	"go-one-server/service/casbin_service"
 	"go-one-server/util/errno"
 	"go-one-server/util/tools"
 )
@@ -17,9 +18,10 @@ func GetUserInfo(username, password string) (map[string]interface{}, error) {
 		return nil, errno.ErrPasswordIncorrect
 	}
 	//生成jwt-token
-	token, err := tools.GenerateJWT(user.Username, user.RoleID.String)
+	token, err := tools.GenerateJWT(user.Username)
 	if err != nil {
 		return nil, err
 	}
-	return map[string]interface{}{"userInfo": user, "token": token}, nil
+	roleInfo, _ := casbin_service.GetRoleByUser(username)
+	return map[string]interface{}{"token": token, "userInfo": user, "roleInfo": roleInfo}, nil
 }

@@ -26,9 +26,11 @@ var (
 	ErrPasswordIncorrect = &Errno{Code: 20103, Message: "密码不正确"}
 
 	// role errors
-	ErrRoleNotFound = &Errno{Code: 20201, Message: "角色不存在"}
-	ErrRoleExisting = &Errno{Code: 20201, Message: "角色已存在"}
+	ErrRoleNotFound     = &Errno{Code: 20201, Message: "角色不存在"}
+	ErrRoleExisting     = &Errno{Code: 20202, Message: "角色已存在"}
+	ErrUserRoleNotFound = &Errno{Code: 20203, Message: "用户未分配角色"}
 
 	// casbin errors
-	ErrUpdateCasbin = &Errno{Code: 20301, Message: "更新角色权限失败"}
+	ErrUpdateCasbinRoleApi = &Errno{Code: 20301, Message: "更新角色权限失败"}
+	ErrSetCasbinUserRole   = &Errno{Code: 20302, Message: "设置用户角色失败"}
 )

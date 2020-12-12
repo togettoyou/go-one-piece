@@ -24,7 +24,7 @@ func CasbinRBAC() gin.HandlerFunc {
 			return
 		}
 		// 判断策略中是否存在
-		success, err := casbin_service.CasbinLoadPolicy().Enforce(claims.RoleID, obj, act)
+		success, err := casbin_service.Casbin().Enforce("root", obj, act)
 		if err != nil {
 			zap.L().Error(err.Error())
 			g.SendNoDataResponse(errno.ErrUnknown)

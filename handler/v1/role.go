@@ -25,7 +25,9 @@ func AddRole(c *gin.Context) {
 		return
 	}
 	role := model.Role{
-		RoleName: body.RoleName,
+		RoleInfo: model.RoleInfo{
+			RoleName: body.RoleName,
+		},
 	}
 	if g.HasSqlError(role.Create()) {
 		return

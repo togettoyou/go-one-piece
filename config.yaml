@@ -47,18 +47,14 @@ casbin:
   model: |
     [request_definition]
     # 请求规则
-    # 访问实体 (Subject)，访问资源 (Object) 和访问方法 (Action)
-    r = sub, obj, act
+    r = roleID, path, method
 
     [policy_definition]
     # 策略规则
-    # 访问实体 (Subject)，访问资源 (Object) 和访问方法 (Action)
-    p = sub, obj, act
+    p = roleID, path, method, apiDec
 
     [role_definition]
     # 角色定义
-    # g 是一个 RBAC系统
-    # _, _表示角色继承关系的前项和后项，即前项继承后项角色的权限
     g = _, _
 
     [policy_effect]
@@ -69,10 +65,11 @@ casbin:
     [matchers]
     # 匹配器
     # 前三个用来匹配上面定义的请求的规则，最后一个或条件为：如果实体是root直接通过，不验证权限
-    m = g(r.sub, p.sub) == true \
-                && queryMatch(r.obj, p.obj) == true \
-                && regexMatch(r.act, p.act) == true \
-                || r.sub == "root"
+    # queryMatch为自定义匹配器，keyMatch可以匹配*
+    m = g(r.roleID, p.roleID) == true \
+                && queryMatch(r.path, p.path) == true \
+                && keyMatch(r.method, p.method) == true \
+                || r.roleID == "root"
 
 # Redis配置
 redis:

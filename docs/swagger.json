@@ -8,7 +8,44 @@
         "version": "1.0"
     },
     "paths": {
-        "/api/v1/casbin": {
+        "/api/v1/casbin/api/{roleID}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "casbin"
+                ],
+                "summary": "根据角色获取权限列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "角色ID",
+                        "name": "roleID",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    }
+                }
+            },
             "put": {
                 "security": [
                     {
@@ -23,6 +60,13 @@
                 ],
                 "summary": "更新角色权限",
                 "parameters": [
+                    {
+                        "type": "string",
+                        "description": "角色ID",
+                        "name": "roleID",
+                        "in": "path",
+                        "required": true
+                    },
                     {
                         "description": "权限信息",
                         "name": "data",
@@ -49,8 +93,8 @@
                 }
             }
         },
-        "/api/v1/casbin/{roleID}": {
-            "get": {
+        "/api/v1/casbin/setUserRole": {
+            "post": {
                 "security": [
                     {
                         "ApiKeyAuth": []
@@ -62,14 +106,16 @@
                 "tags": [
                     "casbin"
                 ],
-                "summary": "根据角色获取权限列表",
+                "summary": "设置用户角色",
                 "parameters": [
                     {
-                        "type": "string",
-                        "description": "角色ID",
-                        "name": "roleID",
-                        "in": "path",
-                        "required": true
+                        "description": "用户角色信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.userRoleBody"
+                        }
                     }
                 ],
                 "responses": {
@@ -480,28 +526,23 @@
                 }
             }
         },
-        "model.CasbinInReceive": {
+        "model.CasbinRoleApiInfo": {
             "type": "object",
+            "required": [
+                "method",
+                "path"
+            ],
             "properties": {
-                "casbinInfos": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/model.CasbinInfo"
-                    }
+                "api_des": {
+                    "type": "string"
                 },
-                "role_id": {
-                    "type": "string"
-                }
-            }
-        },
-        "model.CasbinInfo": {
-            "type": "object",
-            "properties": {
                 "method": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "*"
                 },
                 "path": {
-                    "type": "string"
+                    "type": "string",
+                    "example": "/*"
                 }
             }
         },
@@ -523,12 +564,14 @@
         "v1.casbinBody": {
             "type": "object",
             "required": [
-                "casbin_in_receive"
+                "casbin_role_api_info"
             ],
             "properties": {
-                "casbin_in_receive": {
-                    "type": "object",
-                    "$ref": "#/definitions/model.CasbinInReceive"
+                "casbin_role_api_info": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.CasbinRoleApiInfo"
+                    }
                 }
             }
         },
@@ -564,10 +607,6 @@
                     "type": "string",
                     "example": "备注"
                 },
-                "role_id": {
-                    "type": "string",
-                    "example": "角色ID(可选)"
-                },
                 "username": {
                     "type": "string",
                     "example": "user1"
@@ -583,6 +622,23 @@
                 "role_name": {
                     "type": "string",
                     "example": "角色名"
+                }
+            }
+        },
+        "v1.userRoleBody": {
+            "type": "object",
+            "required": [
+                "roleID",
+                "username"
+            ],
+            "properties": {
+                "roleID": {
+                    "type": "string",
+                    "example": "roleID"
+                },
+                "username": {
+                    "type": "string",
+                    "example": "user1"
                 }
             }
         }

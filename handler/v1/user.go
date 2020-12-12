@@ -1,7 +1,6 @@
 package v1
 
 import (
-	"database/sql"
 	"github.com/gin-gonic/gin"
 	. "go-one-server/handler"
 	"go-one-server/model"
@@ -13,7 +12,6 @@ type registeredUserBody struct {
 	Username string `json:"username" binding:"required,checkUsername" example:"user1"`
 	Password string `json:"password" binding:"required" example:"123456"`
 	Remark   string `json:"remark" binding:"omitempty" example:"备注"`
-	RoleID   string `json:"role_id" binding:"omitempty" example:"角色ID(可选)"`
 }
 
 // @Tags 用户
@@ -30,21 +28,11 @@ func Registered(c *gin.Context) {
 		return
 	}
 	salt := tools.NewRandom().String(6)
-	roleID := sql.NullString{
-		Valid: false,
-	}
-	if body.RoleID != "" {
-		roleID = sql.NullString{
-			String: body.RoleID,
-			Valid:  true,
-		}
-	}
 	user := model.User{
 		Username: body.Username,
 		Password: tools.MD5V(body.Password + salt),
 		Salt:     salt,
 		Remark:   body.Remark,
-		RoleID:   roleID,
 	}
 	if g.HasSqlError(user.Create()) {
 		return
