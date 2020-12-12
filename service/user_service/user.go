@@ -22,6 +22,6 @@ func GetUserInfo(username, password string) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	roleInfo, _ := casbin_service.GetRoleByUser(username)
-	return map[string]interface{}{"token": token, "userInfo": user, "roleInfo": roleInfo}, nil
+	roleID, _ := casbin_service.GetRoleIDByUser(username)
+	return map[string]interface{}{"token": token, "userInfo": user, "roleID": roleID}, nil
 }

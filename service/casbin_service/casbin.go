@@ -63,11 +63,9 @@ func Casbin() *casbin.Enforcer {
 }
 
 // 获取用户的角色ID
-func GetRoleByUser(username string) (string, error) {
+func GetRoleIDByUser(username string) (string, error) {
 	e := Casbin()
 	roles, err := e.GetRolesForUser(username)
-	//policy := e.GetFilteredNamedPolicy("g", 0, username)
-	//zap.S().Info(policy)
 	if err != nil {
 		return "", err
 	}

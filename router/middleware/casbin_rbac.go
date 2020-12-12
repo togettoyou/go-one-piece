@@ -23,8 +23,14 @@ func CasbinRBAC() gin.HandlerFunc {
 			c.Abort()
 			return
 		}
+		roleID, err := casbin_service.GetRoleIDByUser(claims.Username)
+		if err != nil {
+			g.SendNoDataResponse(err)
+			c.Abort()
+			return
+		}
 		// 判断策略中是否存在
-		success, err := casbin_service.Casbin().Enforce("root", obj, act)
+		success, err := casbin_service.Casbin().Enforce(roleID, obj, act)
 		if err != nil {
 			zap.L().Error(err.Error())
 			g.SendNoDataResponse(errno.ErrUnknown)
