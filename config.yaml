@@ -70,7 +70,7 @@ casbin:
     # 匹配器
     # 前三个用来匹配上面定义的请求的规则，最后一个或条件为：如果实体是root直接通过，不验证权限
     m = g(r.sub, p.sub) == true \
-                && keyMatch2(r.obj, p.obj) == true \
+                && queryMatch(r.obj, p.obj) == true \
                 && regexMatch(r.act, p.act) == true \
                 || r.sub == "root"
 

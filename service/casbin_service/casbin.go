@@ -3,12 +3,14 @@ package casbin_service
 import (
 	"github.com/casbin/casbin/v2"
 	casbinmodel "github.com/casbin/casbin/v2/model"
+	"github.com/casbin/casbin/v2/util"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	_ "github.com/go-sql-driver/mysql"
 	"go-one-server/model"
 	"go-one-server/util/conf"
 	"go-one-server/util/errno"
 	"go.uber.org/zap"
+	"strings"
 )
 
 var (
@@ -44,6 +46,8 @@ func Setup() {
 	}
 	// 开启权限认证日志
 	enforcer.EnableLog(conf.Config.Casbin.Log)
+	// 添加自定义匹配器
+	enforcer.AddFunction("queryMatch", queryMatchFunc)
 	// 加载数据库中的策略
 	err = enforcer.LoadPolicy()
 }
@@ -101,4 +105,16 @@ func ClearCasbin(v int, p ...string) bool {
 	e := Casbin()
 	success, _ := e.RemoveFilteredPolicy(v, p...)
 	return success
+}
+
+func queryMatch(fullNameKey1 string, key2 string) bool {
+	//去除路径中?后面的参数
+	key1 := strings.Split(fullNameKey1, "?")[0]
+	return util.KeyMatch2(key1, key2)
+}
+
+func queryMatchFunc(args ...interface{}) (interface{}, error) {
+	key1 := args[0].(string)
+	key2 := args[1].(string)
+	return queryMatch(key1, key2), nil
 }

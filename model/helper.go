@@ -32,7 +32,10 @@ func Paginate(page, pageSize *int) func(db *gorm.DB) *gorm.DB {
 		case *pageSize <= 0:
 			*pageSize = 10
 		}
-		offset := (*page - 1) * *pageSize
+		if *page < 1 {
+			*page = 1
+		}
+		offset := (*page - 1) * (*pageSize)
 		return db.Offset(offset).Limit(*pageSize)
 	}
 }
