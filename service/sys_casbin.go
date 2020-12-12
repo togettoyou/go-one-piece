@@ -2,13 +2,13 @@ package service
 
 import (
 	"github.com/casbin/casbin/v2"
+	casbinmodel "github.com/casbin/casbin/v2/model"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	_ "github.com/go-sql-driver/mysql"
 	"go-one-server/model"
+	"go-one-server/util/conf"
 	"go.uber.org/zap"
 )
-
-var DefaultCasbinFile = "rbac_model.conf"
 
 var (
 	adapter  *gormadapter.Adapter
@@ -31,12 +31,16 @@ func casbinSetup() {
 	if err != nil {
 		return
 	}
-	enforcer, err = casbin.NewEnforcer(DefaultCasbinFile, adapter)
+	m, err := casbinmodel.NewModelFromString(conf.Config.Casbin.Model)
+	if err != nil {
+		return
+	}
+	enforcer, err = casbin.NewEnforcer(m, adapter)
 	if err != nil {
 		return
 	}
 	// 开启权限认证日志
-	enforcer.EnableLog(true)
+	enforcer.EnableLog(conf.Config.Casbin.Log)
 	// 加载数据库中的策略
 	err = enforcer.LoadPolicy()
 }

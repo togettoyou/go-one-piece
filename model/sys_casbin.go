@@ -1,5 +1,6 @@
 package model
 
+// Casbin 记录角色权限
 type Casbin struct {
 	PType  string `json:"p_type" gorm:"column:p_type"`
 	RoleID string `json:"role_id" gorm:"column:v0"`

@@ -12,7 +12,7 @@ type User struct {
 	Password string `json:"-"  gorm:"type:char(32);not null;comment:登录密码"`
 	Salt     string `json:"-" gorm:"type:char(12);not null;comment:混淆盐"`
 	Remark   string `json:"remark" gorm:"comment:备注"`
-	RoleID   string `json:"role_id" gorm:"not null;type:varchar(32);comment:角色ID"`
+	RoleID   string `json:"role_id" gorm:"not null;type:varchar(32);comment:用户角色ID"`
 	Role     Role   `json:"role" gorm:"foreignKey:RoleID;references:RoleID"`
 }
 
