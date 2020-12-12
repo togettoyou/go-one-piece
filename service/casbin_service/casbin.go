@@ -1,4 +1,4 @@
-package service
+package casbin_service
 
 import (
 	"github.com/casbin/casbin/v2"
@@ -15,7 +15,7 @@ var (
 	enforcer *casbin.Enforcer
 )
 
-func casbinSetup() {
+func Setup() {
 	var err error
 	defer func() {
 		panicErr := recover()

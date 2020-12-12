@@ -1,5 +1,7 @@
 package service
 
+import "go-one-server/service/casbin_service"
+
 func Setup() {
-	casbinSetup()
+	casbin_service.Setup()
 }

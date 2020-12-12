@@ -18,6 +18,36 @@ definitions:
     - email
     - username
     type: object
+  v1.loginBody:
+    properties:
+      password:
+        example: "123456"
+        type: string
+      username:
+        example: user1
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  v1.registeredUserBody:
+    properties:
+      password:
+        example: "123456"
+        type: string
+      remark:
+        example: 备注
+        type: string
+      role_id:
+        example: 角色ID(可选)
+        type: string
+      username:
+        example: user1
+        type: string
+    required:
+    - password
+    - username
+    type: object
 info:
   contact: {}
   description: 基于Gin进行快速构建RESTful API 服务的项目模板
@@ -169,6 +199,52 @@ paths:
       summary: uri参数请求
       tags:
       - examples
+  /api/v1/user/login:
+    post:
+      parameters:
+      - description: 登录信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/v1.loginBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: 用户登录
+      tags:
+      - 用户
+  /api/v1/user/registered:
+    post:
+      parameters:
+      - description: 注册信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/v1.registeredUserBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: 用户注册
+      tags:
+      - 用户
 securityDefinitions:
   ApiKeyAuth:
     in: header

@@ -77,6 +77,18 @@ func (g *Gin) HasError(err error, hideDetails ...bool) bool {
 	return false
 }
 
+func (g *Gin) HasSqlError(err error, hideDetails ...bool) bool {
+	if err != nil {
+		if len(hideDetails) > 0 && hideDetails[0] {
+			g.SendNoDataResponse(errno.ErrSQLUnknown)
+			return true
+		}
+		g.SendNoDataResponse(err)
+		return true
+	}
+	return false
+}
+
 func (g *Gin) ParseUriRequest(request interface{}, hideDetails ...bool) bool {
 	if err := g.Ctx.ShouldBindUri(request); err != nil {
 		return g.ValidatorData(err, len(hideDetails) > 0 && hideDetails[0])

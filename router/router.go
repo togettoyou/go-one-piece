@@ -29,12 +29,12 @@ func InitRouter() *gin.Engine {
 	//api路由分组v1版本
 	apiV1 := r.Group("/api/v1")
 	initExamplesRouter(apiV1)
+	initUserRouter(apiV1)
 	return r
 }
 
 func initExamplesRouter(api *gin.RouterGroup) {
 	examplesRouterGroup := api.Group("/examples")
-	examplesRouterGroup.Use(middleware.CasbinRBAC())
 	{
 		examplesRouterGroup.GET("/get", v1.Get)
 		examplesRouterGroup.GET("/uri/:id", v1.Uri)
@@ -43,5 +43,13 @@ func initExamplesRouter(api *gin.RouterGroup) {
 		examplesRouterGroup.POST("/json", v1.JSON)
 		examplesRouterGroup.GET("/query/array", v1.QueryArray)
 		examplesRouterGroup.GET("/query/map", v1.QueryMap)
+	}
+}
+
+func initUserRouter(api *gin.RouterGroup) {
+	userRouterGroup := api.Group("/user")
+	{
+		userRouterGroup.POST("/registered", v1.Registered)
+		userRouterGroup.POST("/login", v1.Login)
 	}
 }

@@ -3,7 +3,7 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	. "go-one-server/handler"
-	"go-one-server/service"
+	"go-one-server/service/casbin_service"
 	"go-one-server/util/errno"
 	"go.uber.org/zap"
 )
@@ -16,7 +16,7 @@ func CasbinRBAC() gin.HandlerFunc {
 		// 获取请求方法
 		act := c.Request.Method
 		// 判断策略中是否存在
-		ok, err := service.Casbin().Enforce("root", obj, act)
+		ok, err := casbin_service.Casbin().Enforce("root", obj, act)
 		if err != nil {
 			zap.L().Error(err.Error())
 			g.SendNoDataResponse(errno.ErrUnknown)

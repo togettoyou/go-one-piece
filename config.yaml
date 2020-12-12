@@ -43,6 +43,7 @@ mysql:
 casbin:
   # 权限认证日志
   log: true
+  # Model存储
   model: |
     [request_definition]
     # 请求规则

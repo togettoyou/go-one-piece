@@ -15,10 +15,12 @@ var jwtSecret = func() string {
 
 type Claims struct {
 	jwt.StandardClaims
+	Username string
+	RoleID   string
 	// 更多自行拓展
 }
 
-func GenerateJWT(id string, issuer string, minute ...int) (string, error) {
+func GenerateJWT(username, roleID string, minute ...int) (string, error) {
 	nowTime := time.Now()
 	var expireTime time.Time
 	if len(minute) > 0 {
@@ -27,15 +29,14 @@ func GenerateJWT(id string, issuer string, minute ...int) (string, error) {
 		expireTime = nowTime.Add(8 * time.Hour)
 	}
 	claims := Claims{
-		jwt.StandardClaims{
-			Audience:  MD5V(id),          // 受众
-			ExpiresAt: expireTime.Unix(), // 失效时间
-			Id:        MD5V(id),          // 编号
+		StandardClaims: jwt.StandardClaims{
 			IssuedAt:  time.Now().Unix(), // 签发时间
-			Issuer:    issuer,            // 签发人
 			NotBefore: time.Now().Unix(), // 生效时间
+			ExpiresAt: expireTime.Unix(), // 失效时间
 			Subject:   "go-one-server",   // 主题
 		},
+		Username: username,
+		RoleID:   roleID,
 	}
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := tokenClaims.SignedString([]byte(jwtSecret()))
