@@ -1,5 +1,15 @@
 package model
 
+type CasbinInfo struct {
+	Path   string `json:"path"`
+	Method string `json:"method"`
+}
+
+type CasbinInReceive struct {
+	RoleID      string       `json:"role_id"`
+	CasbinInfos []CasbinInfo `json:"casbinInfos"`
+}
+
 // Casbin 记录角色权限
 type Casbin struct {
 	PType  string `json:"p_type" gorm:"column:p_type"`

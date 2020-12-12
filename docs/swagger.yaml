@@ -8,6 +8,22 @@ definitions:
       msg:
         type: string
     type: object
+  model.CasbinInReceive:
+    properties:
+      casbinInfos:
+        items:
+          $ref: '#/definitions/model.CasbinInfo'
+        type: array
+      role_id:
+        type: string
+    type: object
+  model.CasbinInfo:
+    properties:
+      method:
+        type: string
+      path:
+        type: string
+    type: object
   v1.JSONBody:
     properties:
       email:
@@ -17,6 +33,14 @@ definitions:
     required:
     - email
     - username
+    type: object
+  v1.casbinBody:
+    properties:
+      casbin_in_receive:
+        $ref: '#/definitions/model.CasbinInReceive'
+        type: object
+    required:
+    - casbin_in_receive
     type: object
   v1.loginBody:
     properties:
@@ -55,6 +79,54 @@ info:
   title: go-one-server
   version: "1.0"
 paths:
+  /api/v1/casbin:
+    get:
+      parameters:
+      - description: 角色ID
+        in: query
+        name: roleID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 根据角色获取权限列表
+      tags:
+      - casbin
+    put:
+      parameters:
+      - description: 权限信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/v1.casbinBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 更新角色权限
+      tags:
+      - casbin
   /api/v1/examples/form:
     post:
       consumes:

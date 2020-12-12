@@ -8,6 +8,84 @@
         "version": "1.0"
     },
     "paths": {
+        "/api/v1/casbin": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "casbin"
+                ],
+                "summary": "根据角色获取权限列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "角色ID",
+                        "name": "roleID",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "casbin"
+                ],
+                "summary": "更新角色权限",
+                "parameters": [
+                    {
+                        "description": "权限信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/v1.casbinBody"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/examples/form": {
             "post": {
                 "description": "处理application/x-www-form-urlencoded类型的POST请求",
@@ -317,6 +395,31 @@
                 }
             }
         },
+        "model.CasbinInReceive": {
+            "type": "object",
+            "properties": {
+                "casbinInfos": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/model.CasbinInfo"
+                    }
+                },
+                "role_id": {
+                    "type": "string"
+                }
+            }
+        },
+        "model.CasbinInfo": {
+            "type": "object",
+            "properties": {
+                "method": {
+                    "type": "string"
+                },
+                "path": {
+                    "type": "string"
+                }
+            }
+        },
         "v1.JSONBody": {
             "type": "object",
             "required": [
@@ -329,6 +432,18 @@
                 },
                 "username": {
                     "type": "string"
+                }
+            }
+        },
+        "v1.casbinBody": {
+            "type": "object",
+            "required": [
+                "casbin_in_receive"
+            ],
+            "properties": {
+                "casbin_in_receive": {
+                    "type": "object",
+                    "$ref": "#/definitions/model.CasbinInReceive"
                 }
             }
         },

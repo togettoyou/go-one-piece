@@ -30,6 +30,7 @@ func InitRouter() *gin.Engine {
 	apiV1 := r.Group("/api/v1")
 	initExamplesRouter(apiV1)
 	initUserRouter(apiV1)
+	initCasbinRouter(apiV1)
 	return r
 }
 
@@ -51,5 +52,14 @@ func initUserRouter(api *gin.RouterGroup) {
 	{
 		userRouterGroup.POST("/registered", v1.Registered)
 		userRouterGroup.POST("/login", v1.Login)
+	}
+}
+
+func initCasbinRouter(api *gin.RouterGroup) {
+	userRouterGroup := api.Group("/casbin")
+	userRouterGroup.Use(middleware.JWT()).Use(middleware.CasbinRBAC())
+	{
+		userRouterGroup.GET("", v1.GetAllCasbin)
+		userRouterGroup.PUT("", v1.UpdateCasbin)
 	}
 }
