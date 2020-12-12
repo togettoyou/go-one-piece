@@ -30,6 +30,7 @@ func InitRouter() *gin.Engine {
 	apiV1 := r.Group("/api/v1")
 	initExamplesRouter(apiV1)
 	initUserRouter(apiV1)
+	initRoleRouter(apiV1)
 	initCasbinRouter(apiV1)
 	return r
 }
@@ -55,11 +56,20 @@ func initUserRouter(api *gin.RouterGroup) {
 	}
 }
 
+func initRoleRouter(api *gin.RouterGroup) {
+	roleRouterGroup := api.Group("/role")
+	roleRouterGroup.Use(middleware.JWT()).Use(middleware.CasbinRBAC())
+	{
+		roleRouterGroup.POST("", v1.AddRole)
+		roleRouterGroup.GET("", v1.GetRoleList)
+	}
+}
+
 func initCasbinRouter(api *gin.RouterGroup) {
 	userRouterGroup := api.Group("/casbin")
 	userRouterGroup.Use(middleware.JWT()).Use(middleware.CasbinRBAC())
 	{
-		userRouterGroup.GET("", v1.GetAllCasbin)
+		userRouterGroup.GET("/:roleID", v1.GetAllCasbin)
 		userRouterGroup.PUT("", v1.UpdateCasbin)
 	}
 }

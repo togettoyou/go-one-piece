@@ -27,6 +27,7 @@ var (
 
 	// role errors
 	ErrRoleNotFound = &Errno{Code: 20201, Message: "角色不存在"}
+	ErrRoleExisting = &Errno{Code: 20201, Message: "角色已存在"}
 
 	// casbin errors
 	ErrUpdateCasbin = &Errno{Code: 20301, Message: "更新角色权限失败"}

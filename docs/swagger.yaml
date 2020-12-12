@@ -72,6 +72,14 @@ definitions:
     - password
     - username
     type: object
+  v1.roleBody:
+    properties:
+      role_name:
+        example: 角色名
+        type: string
+    required:
+    - role_name
+    type: object
 info:
   contact: {}
   description: 基于Gin进行快速构建RESTful API 服务的项目模板
@@ -80,29 +88,6 @@ info:
   version: "1.0"
 paths:
   /api/v1/casbin:
-    get:
-      parameters:
-      - description: 角色ID
-        in: query
-        name: roleID
-        required: true
-        type: string
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            $ref: '#/definitions/handler.Response'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/handler.Response'
-      security:
-      - ApiKeyAuth: []
-      summary: 根据角色获取权限列表
-      tags:
-      - casbin
     put:
       parameters:
       - description: 权限信息
@@ -125,6 +110,30 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 更新角色权限
+      tags:
+      - casbin
+  /api/v1/casbin/{roleID}:
+    get:
+      parameters:
+      - description: 角色ID
+        in: path
+        name: roleID
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 根据角色获取权限列表
       tags:
       - casbin
   /api/v1/examples/form:
@@ -271,6 +280,57 @@ paths:
       summary: uri参数请求
       tags:
       - examples
+  /api/v1/role:
+    get:
+      parameters:
+      - description: 页码
+        in: query
+        name: page
+        type: integer
+      - description: 页面大小
+        in: query
+        name: page_size
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 分页获取角色列表
+      tags:
+      - 角色
+    post:
+      parameters:
+      - description: 角色信息
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/v1.roleBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 添加角色
+      tags:
+      - 角色
   /api/v1/user/login:
     post:
       parameters:

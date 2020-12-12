@@ -7,22 +7,22 @@ import (
 	"go-one-server/service/casbin_service"
 )
 
-type casbinQuery struct {
-	RoleID string `json:"roleID" form:"roleID" binding:"required"`
+type casbinPath struct {
+	RoleID string `json:"roleID" uri:"roleID" binding:"required"`
 }
 
 // @Tags casbin
 // @Summary 根据角色获取权限列表
 // @Produce  json
 // @Security ApiKeyAuth
-// @Param roleID query string true "角色ID"
+// @Param roleID path string true "角色ID"
 // @Success 200 {object} handler.Response
 // @Failure 500 {object} handler.Response
-// @Router /api/v1/casbin [get]
+// @Router /api/v1/casbin/{roleID} [get]
 func GetAllCasbin(c *gin.Context) {
 	g := Gin{Ctx: c}
-	var body casbinQuery
-	if !g.ParseQueryRequest(&body) {
+	var body casbinPath
+	if !g.ParseUriRequest(&body) {
 		return
 	}
 	pathMaps := casbin_service.GetPolicyPathByRoleID(body.RoleID)

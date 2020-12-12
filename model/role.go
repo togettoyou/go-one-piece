@@ -1,6 +1,7 @@
 package model
 
 import (
+	"go-one-server/util/errno"
 	"go-one-server/util/tools"
 	"gorm.io/gorm"
 )
@@ -12,4 +13,33 @@ type Role struct {
 	DeletedAt gorm.DeletedAt   `json:"-" gorm:"index"`
 	RoleID    string           `json:"role_id" gorm:"unique;not null;primarykey;type:varchar(32);comment:角色ID"`
 	RoleName  string           `json:"role_name" gorm:"unique;not null;type:varchar(20);comment:角色名字"`
+}
+
+func (r *Role) BeforeCreate(tx *gorm.DB) error {
+	var count int64
+	tx.Model(&Role{}).Where("role_name = ?", r.RoleName).Count(&count)
+	if count > 0 {
+		return errno.ErrRoleExisting
+	}
+	r.RoleID = tools.UUID()
+	return nil
+}
+
+func (r *Role) Create() error {
+	return db.Create(r).Error
+}
+
+func GetRoleList(page, pageSize int) (data *PaginationQ, err error) {
+	var roles []*Role
+	var total int64
+	err = db.Model(&Role{}).Scopes(Count(&total)).Scopes(Paginate(&page, &pageSize)).Find(&roles).Error
+	if err != nil {
+		return nil, err
+	}
+	return &PaginationQ{
+		PageSize: pageSize,
+		Page:     page,
+		Data:     roles,
+		Total:    total,
+	}, nil
 }
