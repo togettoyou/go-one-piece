@@ -9,9 +9,10 @@ import (
 )
 
 type registeredUserBody struct {
-	Username string `json:"username" binding:"required,checkUsername" example:"user1"`
-	Password string `json:"password" binding:"required" example:"123456"`
-	Remark   string `json:"remark" binding:"omitempty" example:"备注"`
+	Username   string `json:"username" binding:"required,checkUsername" example:"user1"`
+	Password   string `json:"password" binding:"required" example:"123456"`
+	RePassword string `json:"re_password" binding:"required,eqfield=Password" example:"123456"`
+	Remark     string `json:"remark" binding:"omitempty" example:"备注"`
 }
 
 // @Tags 用户

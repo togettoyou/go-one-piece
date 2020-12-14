@@ -11,6 +11,7 @@ definitions:
   model.CasbinRoleApiInfo:
     properties:
       api_des:
+        example: 描述
         type: string
       method:
         example: '*'
@@ -19,8 +20,24 @@ definitions:
         example: /*
         type: string
     required:
+    - api_des
     - method
     - path
+    type: object
+  model.RoleInfo:
+    properties:
+      remark:
+        example: 备注
+        type: string
+      role_key:
+        example: 角色代码
+        type: string
+      role_name:
+        example: 角色名
+        type: string
+    required:
+    - role_key
+    - role_name
     type: object
   v1.JSONBody:
     properties:
@@ -58,6 +75,9 @@ definitions:
       password:
         example: "123456"
         type: string
+      re_password:
+        example: "123456"
+        type: string
       remark:
         example: 备注
         type: string
@@ -66,26 +86,18 @@ definitions:
         type: string
     required:
     - password
+    - re_password
     - username
-    type: object
-  v1.roleBody:
-    properties:
-      role_name:
-        example: 角色名
-        type: string
-    required:
-    - role_name
     type: object
   v1.userRoleBody:
     properties:
-      roleID:
-        example: roleID
+      role_key:
         type: string
       username:
         example: user1
         type: string
     required:
-    - roleID
+    - role_key
     - username
     type: object
 info:
@@ -95,12 +107,12 @@ info:
   title: go-one-server
   version: "1.0"
 paths:
-  /api/v1/casbin/api/{roleID}:
+  /api/v1/casbin/api/{role_key}:
     get:
       parameters:
-      - description: 角色ID
+      - description: 角色代码
         in: path
-        name: roleID
+        name: role_key
         required: true
         type: string
       produces:
@@ -121,9 +133,9 @@ paths:
       - casbin
     put:
       parameters:
-      - description: 角色ID
+      - description: 角色代码
         in: path
-        name: roleID
+        name: role_key
         required: true
         type: string
       - description: 权限信息
@@ -351,7 +363,7 @@ paths:
         name: data
         required: true
         schema:
-          $ref: '#/definitions/v1.roleBody'
+          $ref: '#/definitions/model.RoleInfo'
       produces:
       - application/json
       responses:
@@ -366,6 +378,30 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: 添加角色
+      tags:
+      - 角色
+  /api/v1/role/{role_key}:
+    delete:
+      parameters:
+      - description: 角色代码
+        in: path
+        name: role_key
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      security:
+      - ApiKeyAuth: []
+      summary: 删除角色
       tags:
       - 角色
   /api/v1/user/login:

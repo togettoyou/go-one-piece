@@ -7,26 +7,22 @@ import (
 	"go-one-server/service/casbin_service"
 )
 
-type casbinPath struct {
-	RoleID string `json:"roleID" uri:"roleID" binding:"required"`
-}
-
 // @Tags casbin
 // @Summary 根据角色获取权限列表
 // @Produce  json
 // @Security ApiKeyAuth
-// @Param roleID path string true "角色ID"
+// @Param role_key path string true "角色代码"
 // @Success 200 {object} handler.Response
 // @Failure 500 {object} handler.Response
-// @Router /api/v1/casbin/api/{roleID} [get]
+// @Router /api/v1/casbin/api/{role_key} [get]
 func GetAllCasbinApi(c *gin.Context) {
 	g := Gin{Ctx: c}
-	var uri casbinPath
+	var uri RolePath
 	if !g.ParseUriRequest(&uri) {
 		return
 	}
-	pathMaps := casbin_service.GetApiByRoleID(uri.RoleID)
-	g.OkWithDataResponse(pathMaps)
+	apiMaps := casbin_service.GetApiByRoleKey(uri.RoleKey)
+	g.OkWithDataResponse(apiMaps)
 }
 
 type casbinBody struct {
@@ -37,14 +33,14 @@ type casbinBody struct {
 // @Summary 更新角色权限
 // @Produce  json
 // @Security ApiKeyAuth
-// @Param roleID path string true "角色ID"
+// @Param role_key path string true "角色代码"
 // @Param data body casbinBody true "权限信息"
 // @Success 200 {object} handler.Response
 // @Failure 500 {object} handler.Response
-// @Router /api/v1/casbin/api/{roleID} [put]
+// @Router /api/v1/casbin/api/{role_key} [put]
 func UpdateCasbinApi(c *gin.Context) {
 	g := Gin{Ctx: c}
-	var uri casbinPath
+	var uri RolePath
 	if !g.ParseUriRequest(&uri) {
 		return
 	}
@@ -53,20 +49,20 @@ func UpdateCasbinApi(c *gin.Context) {
 		return
 	}
 	// 先从数据库查询角色，确保角色存在
-	role, err := model.FindRole(uri.RoleID)
+	role, err := model.FindRoleByKey(uri.RoleKey)
 	if g.HasSqlError(err) {
 		return
 	}
-	if g.HasError(casbin_service.UpdateRoleApi(role.RoleID, body.CasbinRoleApiInfo)) {
+	if g.HasError(casbin_service.UpdateRoleApi(role.RoleKey, body.CasbinRoleApiInfo)) {
 		return
 	}
-	pathMaps := casbin_service.GetApiByRoleID(uri.RoleID)
-	g.OkWithDataResponse(pathMaps)
+	apiMaps := casbin_service.GetApiByRoleKey(uri.RoleKey)
+	g.OkWithDataResponse(apiMaps)
 }
 
 type userRoleBody struct {
 	Username string `json:"username" binding:"required" example:"user1"`
-	RoleID   string `json:"roleID" binding:"required" example:"roleID"`
+	RoleKey  string `json:"role_key" binding:"required"`
 }
 
 // @Tags casbin
@@ -84,11 +80,16 @@ func SetUserRole(c *gin.Context) {
 		return
 	}
 	// 先从数据库查询角色
-	role, err := model.FindRole(body.RoleID)
+	role, err := model.FindRoleByKey(body.RoleKey)
 	if g.HasSqlError(err) {
 		return
 	}
-	if g.HasError(casbin_service.SetUserRole(body.Username, role.RoleID, role.RoleName)) {
+	// 从数据库查询用户
+	user, err := model.FindUser(body.Username)
+	if g.HasSqlError(err) {
+		return
+	}
+	if g.HasError(casbin_service.SetUserRole(user.Username, role.RoleKey)) {
 		return
 	}
 	g.OkWithMsgResponse("修改成功")

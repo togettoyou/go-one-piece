@@ -4,30 +4,26 @@ import (
 	"github.com/gin-gonic/gin"
 	. "go-one-server/handler"
 	"go-one-server/model"
+	"go-one-server/service/casbin_service"
+	"go-one-server/util/errno"
 )
-
-type roleBody struct {
-	RoleName string `json:"role_name" binding:"required,max=20" example:"角色名"`
-}
 
 // @Tags 角色
 // @Summary 添加角色
 // @Produce json
 // @Security ApiKeyAuth
-// @Param data body roleBody true "角色信息"
+// @Param data body model.RoleInfo true "角色信息"
 // @Success 200 {object} handler.Response
 // @Failure 500 {object} handler.Response
 // @Router /api/v1/role [post]
 func AddRole(c *gin.Context) {
 	g := Gin{Ctx: c}
-	var body roleBody
+	var body model.RoleInfo
 	if !g.ParseJSONRequest(&body) {
 		return
 	}
 	role := model.Role{
-		RoleInfo: model.RoleInfo{
-			RoleName: body.RoleName,
-		},
+		RoleInfo: body,
 	}
 	if g.HasSqlError(role.Create()) {
 		return
@@ -60,4 +56,34 @@ func GetRoleList(c *gin.Context) {
 		return
 	}
 	g.OkWithDataResponse(roleList)
+}
+
+type RolePath struct {
+	RoleKey string `json:"role_key" uri:"role_key" binding:"required"`
+}
+
+// @Tags 角色
+// @Summary 删除角色
+// @Produce  json
+// @Security ApiKeyAuth
+// @Param role_key path string true "角色代码"
+// @Success 200 {object} handler.Response
+// @Failure 500 {object} handler.Response
+// @Router /api/v1/role/{role_key} [delete]
+func DelRole(c *gin.Context) {
+	g := Gin{Ctx: c}
+	var uri RolePath
+	if !g.ParseUriRequest(&uri) {
+		return
+	}
+	// 清空角色拥有的权限
+	if casbin_service.ClearRoleApi(uri.RoleKey) {
+		if g.HasSqlError(model.DelRole(uri.RoleKey)) {
+			return
+		}
+		g.OkWithMsgResponse("删除成功，权限已清空")
+		return
+	} else {
+		g.SendNoDataResponse(errno.ErrDelRoleApi)
+	}
 }

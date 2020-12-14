@@ -15,8 +15,6 @@ type User struct {
 }
 
 // 创建钩子 https://gorm.io/zh_CN/docs/hooks.html
-// 创建记录时将调用这些钩子方法
-// 钩子中的db操作需使用事务tx
 func (u *User) BeforeCreate(tx *gorm.DB) error {
 	var count int64
 	tx.Model(&User{}).Where("username = ?", u.Username).Count(&count)

@@ -62,74 +62,80 @@ func Casbin() *casbin.Enforcer {
 	return enforcer
 }
 
-// 获取用户的角色ID
-func GetRoleIDByUser(username string) (string, error) {
+// 获取用户的角色代码
+func GetRoleKeyByUser(username string) string {
 	e := Casbin()
-	roles, err := e.GetRolesForUser(username)
-	if err != nil {
-		return "", err
-	}
+	roles := e.GetFilteredGroupingPolicy(0, username)
 	if len(roles) < 1 {
-		return "", errno.ErrUserRoleNotFound
+		return ""
 	}
-	return roles[0], nil
+	if len(roles[0]) < 2 {
+		return ""
+	}
+	return roles[0][1]
 }
 
 // 设置用户角色
-func SetUserRole(username, roleID, roleName string) error {
+func SetUserRole(username, roleKey string) error {
+	ClearUserRole(username)
 	e := Casbin()
-	// 本系统只支持一个用户一个角色，所以先删除再增加
-	_, err := e.DeleteRolesForUser(username)
+	success, err := e.AddRoleForUser(username, roleKey)
 	if err != nil {
 		return err
 	}
-	success, err := e.AddRoleForUser(username, roleID, roleName)
-	if err != nil {
-		return err
-	}
-	if success == false {
+	if !success {
 		return errno.ErrSetCasbinUserRole
 	}
 	return nil
 }
 
 // 获取角色权限列表
-func GetApiByRoleID(roleID string) []model.CasbinRoleApiInfo {
+func GetApiByRoleKey(roleKey string) []model.CasbinRoleApiInfo {
 	e := Casbin()
-	pathMaps := make([]model.CasbinRoleApiInfo, 0)
-	list := e.GetFilteredPolicy(0, roleID)
+	apiMaps := make([]model.CasbinRoleApiInfo, 0)
+	list := e.GetFilteredPolicy(0, roleKey)
 	for _, v := range list {
-		pathMaps = append(pathMaps, model.CasbinRoleApiInfo{
+		if len(v) < 4 {
+			continue
+		}
+		apiMaps = append(apiMaps, model.CasbinRoleApiInfo{
 			Path:   v[1],
 			Method: v[2],
 			ApiDes: v[3],
 		})
 	}
-	return pathMaps
+	return apiMaps
 }
 
 // 更新角色权限
-func UpdateRoleApi(roleID string, casbinInfos []model.CasbinRoleApiInfo) error {
-	ClearCasbin(0, roleID)
+func UpdateRoleApi(roleKey string, casbinInfos []model.CasbinRoleApiInfo) error {
+	ClearRoleApi(roleKey)
 	var rules [][]string
 	for _, v := range casbinInfos {
-		rules = append(rules, []string{roleID, v.Path, v.Method, v.ApiDes})
+		rules = append(rules, []string{roleKey, v.Path, v.Method, v.ApiDes})
 	}
 	e := Casbin()
 	success, err := e.AddPolicies(rules)
 	if err != nil {
 		return err
 	}
-	if success == false {
+	if !success {
 		return errno.ErrUpdateCasbinRoleApi
 	}
 	return nil
 }
 
-// 清除匹配的权限
-func ClearCasbin(v int, p ...string) bool {
+// 清除用户角色
+func ClearUserRole(p ...string) bool {
 	e := Casbin()
-	success, _ := e.RemoveFilteredPolicy(v, p...)
+	success, _ := e.RemoveFilteredGroupingPolicy(0, p...)
+	return success
+}
+
+// 清除角色api权限
+func ClearRoleApi(p ...string) bool {
+	e := Casbin()
+	success, _ := e.RemoveFilteredPolicy(0, p...)
 	return success
 }
 

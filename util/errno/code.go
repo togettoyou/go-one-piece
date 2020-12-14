@@ -18,7 +18,8 @@ var (
 	ErrTokenExpired = &Errno{Code: 20003, Message: "令牌已过期"}
 	ErrTokenInvalid = &Errno{Code: 20004, Message: "令牌无效"}
 	ErrTokenFailure = &Errno{Code: 20005, Message: "令牌验证失败"}
-	ErrPermission   = &Errno{Code: 20006, Message: "权限不足"}
+	ErrPermission   = &Errno{Code: 20006, Message: "没有权限"}
+	ErrCasbin       = &Errno{Code: 20007, Message: "权限验证失败"}
 
 	// user errors
 	ErrUserNotFound      = &Errno{Code: 20101, Message: "用户不存在"}
@@ -26,11 +27,11 @@ var (
 	ErrPasswordIncorrect = &Errno{Code: 20103, Message: "密码不正确"}
 
 	// role errors
-	ErrRoleNotFound     = &Errno{Code: 20201, Message: "角色不存在"}
-	ErrRoleExisting     = &Errno{Code: 20202, Message: "角色已存在"}
-	ErrUserRoleNotFound = &Errno{Code: 20203, Message: "用户未分配角色"}
+	ErrRoleNotFound = &Errno{Code: 20201, Message: "角色不存在"}
+	ErrRoleExisting = &Errno{Code: 20202, Message: "角色已存在"}
 
 	// casbin errors
 	ErrUpdateCasbinRoleApi = &Errno{Code: 20301, Message: "更新角色权限失败"}
 	ErrSetCasbinUserRole   = &Errno{Code: 20302, Message: "设置用户角色失败"}
+	ErrDelRoleApi          = &Errno{Code: 20303, Message: "清空角色权限失败"}
 )

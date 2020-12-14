@@ -47,11 +47,11 @@ casbin:
   model: |
     [request_definition]
     # 请求规则
-    r = roleID, path, method
+    r = roleKey, path, method
 
     [policy_definition]
     # 策略规则
-    p = roleID, path, method, apiDec
+    p = roleKey, path, method, apiDec
 
     [role_definition]
     # 角色定义
@@ -64,12 +64,12 @@ casbin:
 
     [matchers]
     # 匹配器
-    # 前三个用来匹配上面定义的请求的规则，最后一个或条件为：如果实体是root直接通过，不验证权限
+    # 前三个用来匹配上面定义的请求的规则，最后一个或条件为：如果roleKey是root直接通过，不验证权限
     # queryMatch为自定义匹配器，keyMatch可以匹配*
-    m = g(r.roleID, p.roleID) == true \
+    m = g(r.roleKey, p.roleKey) == true \
                 && queryMatch(r.path, p.path) == true \
                 && keyMatch(r.method, p.method) == true \
-                || r.roleID == "root"
+                || r.roleKey == "root"
 
 # Redis配置
 redis:

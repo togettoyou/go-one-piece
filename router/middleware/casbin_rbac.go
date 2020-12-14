@@ -13,31 +13,23 @@ func CasbinRBAC() gin.HandlerFunc {
 	return func(c *gin.Context) {
 		g := Gin{Ctx: c}
 		// 获取请求的URI
-		obj := c.Request.URL.RequestURI()
+		path := c.Request.URL.RequestURI()
 		// 获取请求方法
-		act := c.Request.Method
-		// 获取用户角色ID
+		method := c.Request.Method
+		// 获取用户名
 		claims := GetJWTClaims(c)
 		if claims == nil {
-			g.SendNoDataResponse(errno.ErrTokenFailure)
+			g.SendNoDataResponse(errno.ErrCasbin)
 			c.Abort()
 			return
 		}
-		roleID, err := casbin_service.GetRoleIDByUser(claims.Username)
-		if err != nil {
-			g.SendNoDataResponse(err)
-			c.Abort()
-			return
-		}
-		// 判断策略中是否存在
-		success, err := casbin_service.Casbin().Enforce(roleID, obj, act)
-		if err != nil {
-			zap.L().Error(err.Error())
-			g.SendNoDataResponse(errno.ErrUnknown)
-			c.Abort()
-			return
-		}
-		if !success {
+		roleKey := casbin_service.GetRoleKeyByUser(claims.Username)
+		// 传入casbin请求规则，判断策略中是否存在
+		success, err := casbin_service.Casbin().Enforce(roleKey, path, method)
+		if err != nil || !success {
+			if err != nil {
+				zap.L().Error(err.Error())
+			}
 			g.SendNoDataResponse(errno.ErrPermission)
 			c.Abort()
 			return

@@ -2,31 +2,26 @@ package model
 
 import (
 	"go-one-server/util/errno"
-	"go-one-server/util/tools"
 	"gorm.io/gorm"
 )
 
 // Role 角色
 type Role struct {
-	CreatedAt tools.FormatTime `json:"created_at"`
-	UpdatedAt tools.FormatTime `json:"-"`
-	DeletedAt gorm.DeletedAt   `json:"-" gorm:"index"`
+	Model
 	RoleInfo
 }
 
 type RoleInfo struct {
-	RoleID   string `json:"role_id" gorm:"unique;not null;primarykey;type:varchar(32);comment:角色ID"`
-	RoleName string `json:"role_name" gorm:"unique;not null;type:varchar(20);comment:角色名字"`
+	RoleKey  string `json:"role_key" gorm:"unique;not null;size:32;comment:角色代码" binding:"required,alphanum,min=4,max=32" example:"角色代码"`
+	RoleName string `json:"role_name" gorm:"unique;not null;type:varchar(20);comment:角色名字" binding:"required,min=2,max=20" example:"角色名"`
+	Remark   string `json:"remark" gorm:"comment:备注" example:"备注"`
 }
 
 func (r *Role) BeforeCreate(tx *gorm.DB) error {
 	var count int64
-	tx.Model(&Role{}).Where("role_name = ?", r.RoleName).Count(&count)
+	tx.Model(&Role{}).Where("role_key = ? OR role_name = ?", r.RoleKey, r.RoleName).Count(&count)
 	if count > 0 {
 		return errno.ErrRoleExisting
-	}
-	if r.RoleID == "" {
-		r.RoleID = tools.UUID()
 	}
 	return nil
 }
@@ -50,9 +45,9 @@ func GetRoleList(page, pageSize int) (data *PaginationQ, err error) {
 	}, nil
 }
 
-func FindRole(roleID string) (*Role, error) {
+func FindRoleByKey(roleKey string) (*Role, error) {
 	var role Role
-	if err := db.Where(map[string]interface{}{"role_id": roleID}).
+	if err := db.Where(map[string]interface{}{"role_key": roleKey}).
 		Take(&role).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return nil, errno.ErrRoleNotFound
@@ -60,4 +55,9 @@ func FindRole(roleID string) (*Role, error) {
 		return nil, err
 	}
 	return &role, nil
+}
+
+func DelRole(roleKey string) error {
+	return db.Where("role_key = ?", roleKey).
+		Delete(&Role{}).Error
 }
