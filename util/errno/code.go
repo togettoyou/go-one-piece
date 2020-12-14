@@ -30,6 +30,9 @@ var (
 	ErrRoleNotFound = &Errno{Code: 20201, Message: "角色不存在"}
 	ErrRoleExisting = &Errno{Code: 20202, Message: "角色已存在"}
 
+	// api errors
+	ErrApiNotFound = &Errno{Code: 20201, Message: "API不存在"}
+
 	// casbin errors
 	ErrUpdateCasbinRoleApi = &Errno{Code: 20301, Message: "更新角色权限失败"}
 	ErrSetCasbinUserRole   = &Errno{Code: 20302, Message: "设置用户角色失败"}

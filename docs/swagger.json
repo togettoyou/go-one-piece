@@ -8,6 +8,128 @@
         "version": "1.0"
     },
     "paths": {
+        "/api/v1/api": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API"
+                ],
+                "summary": "分页获取API列表",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "页码",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "页面大小",
+                        "name": "page_size",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API"
+                ],
+                "summary": "添加API",
+                "parameters": [
+                    {
+                        "description": "api信息",
+                        "name": "data",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/model.ApiInfo"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/api/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "API"
+                ],
+                "summary": "删除API",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "api ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/handler.Response"
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/casbin/api/{role_key}": {
             "get": {
                 "security": [
@@ -21,7 +143,7 @@
                 "tags": [
                     "casbin"
                 ],
-                "summary": "根据角色获取权限列表",
+                "summary": "查看角色权限",
                 "parameters": [
                     {
                         "type": "string",
@@ -73,7 +195,7 @@
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/v1.casbinBody"
+                            "$ref": "#/definitions/v1.casbinApiBody"
                         }
                     }
                 ],
@@ -565,25 +687,30 @@
                 }
             }
         },
-        "model.CasbinRoleApiInfo": {
+        "model.ApiInfo": {
             "type": "object",
             "required": [
-                "api_des",
+                "api_group",
+                "description",
                 "method",
                 "path"
             ],
             "properties": {
-                "api_des": {
+                "api_group": {
                     "type": "string",
-                    "example": "描述"
+                    "example": "base"
+                },
+                "description": {
+                    "type": "string",
+                    "example": "api中文描述"
                 },
                 "method": {
                     "type": "string",
-                    "example": "*"
+                    "example": "POST"
                 },
                 "path": {
                     "type": "string",
-                    "example": "/*"
+                    "example": "/api/v1/api"
                 }
             }
         },
@@ -623,16 +750,16 @@
                 }
             }
         },
-        "v1.casbinBody": {
+        "v1.casbinApiBody": {
             "type": "object",
             "required": [
-                "casbin_role_api_info"
+                "api_id_list"
             ],
             "properties": {
-                "casbin_role_api_info": {
+                "api_id_list": {
                     "type": "array",
                     "items": {
-                        "$ref": "#/definitions/model.CasbinRoleApiInfo"
+                        "type": "integer"
                     }
                 }
             }

@@ -8,14 +8,14 @@ import (
 )
 
 // @Tags casbin
-// @Summary 根据角色获取权限列表
+// @Summary 查看角色权限
 // @Produce  json
 // @Security ApiKeyAuth
 // @Param role_key path string true "角色代码"
 // @Success 200 {object} handler.Response
 // @Failure 500 {object} handler.Response
 // @Router /api/v1/casbin/api/{role_key} [get]
-func GetAllCasbinApi(c *gin.Context) {
+func GetCasbinApi(c *gin.Context) {
 	g := Gin{Ctx: c}
 	var uri RolePath
 	if !g.ParseUriRequest(&uri) {
@@ -25,8 +25,8 @@ func GetAllCasbinApi(c *gin.Context) {
 	g.OkWithDataResponse(apiMaps)
 }
 
-type casbinBody struct {
-	CasbinRoleApiInfo []model.CasbinRoleApiInfo `json:"casbin_role_api_info" binding:"required"`
+type casbinApiBody struct {
+	ApiIDList []uint `json:"api_id_list" binding:"required"`
 }
 
 // @Tags casbin
@@ -34,7 +34,7 @@ type casbinBody struct {
 // @Produce  json
 // @Security ApiKeyAuth
 // @Param role_key path string true "角色代码"
-// @Param data body casbinBody true "权限信息"
+// @Param data body casbinApiBody true "权限信息"
 // @Success 200 {object} handler.Response
 // @Failure 500 {object} handler.Response
 // @Router /api/v1/casbin/api/{role_key} [put]
@@ -44,7 +44,7 @@ func UpdateCasbinApi(c *gin.Context) {
 	if !g.ParseUriRequest(&uri) {
 		return
 	}
-	var body casbinBody
+	var body casbinApiBody
 	if !g.ParseJSONRequest(&body) {
 		return
 	}
@@ -53,7 +53,13 @@ func UpdateCasbinApi(c *gin.Context) {
 	if g.HasSqlError(err) {
 		return
 	}
-	if g.HasError(casbin_service.UpdateRoleApi(role.RoleKey, body.CasbinRoleApiInfo)) {
+	// 从数据库查找权限
+	apis, err := model.FindApiInID(body.ApiIDList)
+	if g.HasSqlError(err) {
+		return
+	}
+	// 写入casbin
+	if g.HasError(casbin_service.UpdateRoleApi(role.RoleKey, apis)) {
 		return
 	}
 	apiMaps := casbin_service.GetApiByRoleKey(uri.RoleKey)

@@ -61,7 +61,7 @@ func Setup() {
 		return
 	}
 	connectionPool()
-	autoMigrate(User{}, Role{})
+	autoMigrate(&User{}, &Role{}, &Api{})
 }
 
 func autoMigrate(tables ...interface{}) {

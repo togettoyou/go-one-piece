@@ -10,6 +10,7 @@ import (
 	"go-one-server/util/conf"
 	"go-one-server/util/errno"
 	"go.uber.org/zap"
+	"strconv"
 	"strings"
 )
 
@@ -90,29 +91,30 @@ func SetUserRole(username, roleKey string) error {
 }
 
 // 获取角色权限列表
-func GetApiByRoleKey(roleKey string) []model.CasbinRoleApiInfo {
+func GetApiByRoleKey(roleKey string) []model.CasbinRoleApi {
 	e := Casbin()
-	apiMaps := make([]model.CasbinRoleApiInfo, 0)
+	apis := make([]model.CasbinRoleApi, 0)
 	list := e.GetFilteredPolicy(0, roleKey)
 	for _, v := range list {
-		if len(v) < 4 {
+		if len(v) < 5 {
 			continue
 		}
-		apiMaps = append(apiMaps, model.CasbinRoleApiInfo{
+		apis = append(apis, model.CasbinRoleApi{
 			Path:   v[1],
 			Method: v[2],
 			ApiDes: v[3],
+			ApiID:  v[4],
 		})
 	}
-	return apiMaps
+	return apis
 }
 
 // 更新角色权限
-func UpdateRoleApi(roleKey string, casbinInfos []model.CasbinRoleApiInfo) error {
+func UpdateRoleApi(roleKey string, apis []model.Api) error {
 	ClearRoleApi(roleKey)
 	var rules [][]string
-	for _, v := range casbinInfos {
-		rules = append(rules, []string{roleKey, v.Path, v.Method, v.ApiDes})
+	for _, v := range apis {
+		rules = append(rules, []string{roleKey, v.Path, v.Method, v.Description, strconv.Itoa(int(v.ID))})
 	}
 	e := Casbin()
 	success, err := e.AddPolicies(rules)

@@ -51,7 +51,7 @@ casbin:
 
     [policy_definition]
     # 策略规则
-    p = roleKey, path, method, apiDec
+    p = roleKey, path, method, apiDec, apiID
 
     [role_definition]
     # 角色定义
