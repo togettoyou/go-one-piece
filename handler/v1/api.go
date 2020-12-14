@@ -4,6 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	. "go-one-server/handler"
 	"go-one-server/model"
+	"go-one-server/service/casbin_service"
+	"strconv"
 )
 
 // @Tags API
@@ -64,28 +66,21 @@ type ApiPath struct {
 // @Failure 500 {object} handler.Response
 // @Router /api/v1/api/{id} [delete]
 func DelApi(c *gin.Context) {
-	//g := Gin{Ctx: c}
-	//var uri ApiPath
-	//if !g.ParseUriRequest(&uri) {
-	//	return
-	//}
-	//// 从数据库查找权限
-	//api, err := model.FindApiByID(uri.ID)
-	//if g.HasSqlError(err) {
-	//	return
-	//}
-	//// 清空角色拥有的权限
-	//casbin_service.Casbin().RemovePolicies([][]string{{
-	//	strconv.Itoa(int(api.ID)), api.Path, api.Method, api.Description,
-	//}})
-	//g.OkWithMsgResponse("删除成功，相应权限已清空")
-	//if casbin_service.ClearRoleApi(uri.RoleKey) {
-	//	if g.HasSqlError(model.DelApi(uri.ID)) {
-	//		return
-	//	}
-	//	g.OkWithMsgResponse("删除成功，权限已清空")
-	//	return
-	//} else {
-	//	g.SendNoDataResponse(errno.ErrDelRoleApi)
-	//}
+	g := Gin{Ctx: c}
+	var uri ApiPath
+	if !g.ParseUriRequest(&uri) {
+		return
+	}
+	// 从数据库查找权限
+	api, err := model.FindApiByID(uri.ID)
+	if g.HasSqlError(err) {
+		return
+	}
+	// 删除
+	if g.HasSqlError(model.DelApi(uri.ID)) {
+		return
+	}
+	// 清空角色拥有的权限
+	casbin_service.ClearByApiID(strconv.Itoa(int(api.ID)))
+	g.OkWithMsgResponse("删除API成功，相应权限已清空")
 }

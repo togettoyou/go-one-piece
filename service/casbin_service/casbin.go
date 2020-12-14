@@ -78,7 +78,7 @@ func GetRoleKeyByUser(username string) string {
 
 // 设置用户角色
 func SetUserRole(username, roleKey string) error {
-	ClearUserRole(username)
+	ClearRoleByUsername(username)
 	e := Casbin()
 	success, err := e.AddRoleForUser(username, roleKey)
 	if err != nil {
@@ -111,7 +111,7 @@ func GetApiByRoleKey(roleKey string) []model.CasbinRoleApi {
 
 // 更新角色权限
 func UpdateRoleApi(roleKey string, apis []model.Api) error {
-	ClearRoleApi(roleKey)
+	ClearApiByRoleKey(roleKey)
 	var rules [][]string
 	for _, v := range apis {
 		rules = append(rules, []string{roleKey, v.Path, v.Method, v.Description, strconv.Itoa(int(v.ID))})
@@ -127,17 +127,31 @@ func UpdateRoleApi(roleKey string, apis []model.Api) error {
 	return nil
 }
 
-// 清除用户角色
-func ClearUserRole(p ...string) bool {
+// 根据用户名清除对应角色
+func ClearRoleByUsername(username string) bool {
 	e := Casbin()
-	success, _ := e.RemoveFilteredGroupingPolicy(0, p...)
+	success, _ := e.RemoveFilteredGroupingPolicy(0, username)
 	return success
 }
 
-// 清除角色api权限
-func ClearRoleApi(p ...string) bool {
+// 根据角色代码清除
+func ClearUserByRoleKey(roleKey string) bool {
 	e := Casbin()
-	success, _ := e.RemoveFilteredPolicy(0, p...)
+	success, _ := e.RemoveFilteredGroupingPolicy(1, roleKey)
+	return success
+}
+
+// 根据角色代码清除所有权限
+func ClearApiByRoleKey(roleKey string) bool {
+	e := Casbin()
+	success, _ := e.RemoveFilteredPolicy(0, roleKey)
+	return success
+}
+
+// 根据API ID清除
+func ClearByApiID(apiID string) bool {
+	e := Casbin()
+	success, _ := e.RemoveFilteredPolicy(4, apiID)
 	return success
 }
 

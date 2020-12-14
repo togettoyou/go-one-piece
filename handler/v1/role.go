@@ -5,7 +5,6 @@ import (
 	. "go-one-server/handler"
 	"go-one-server/model"
 	"go-one-server/service/casbin_service"
-	"go-one-server/util/errno"
 )
 
 // @Tags 角色
@@ -76,14 +75,12 @@ func DelRole(c *gin.Context) {
 	if !g.ParseUriRequest(&uri) {
 		return
 	}
-	// 清空角色拥有的权限
-	if casbin_service.ClearRoleApi(uri.RoleKey) {
-		if g.HasSqlError(model.DelRole(uri.RoleKey)) {
-			return
-		}
-		g.OkWithMsgResponse("删除成功，权限已清空")
+	// 删除
+	if g.HasSqlError(model.DelRole(uri.RoleKey)) {
 		return
-	} else {
-		g.SendNoDataResponse(errno.ErrDelRoleApi)
 	}
+	// 清空用户的角色和拥有的权限
+	casbin_service.ClearUserByRoleKey(uri.RoleKey)
+	casbin_service.ClearApiByRoleKey(uri.RoleKey)
+	g.OkWithMsgResponse("删除角色成功，相应权限已清空")
 }
