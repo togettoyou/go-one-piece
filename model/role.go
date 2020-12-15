@@ -7,7 +7,7 @@ import (
 
 // Role 角色
 type Role struct {
-	Model
+	ID uint `json:"id" gorm:"primarykey"`
 	RoleInfo
 }
 
