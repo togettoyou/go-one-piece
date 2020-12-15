@@ -31,10 +31,9 @@ var (
 	ErrRoleExisting = &Errno{Code: 20202, Message: "角色已存在"}
 
 	// api errors
-	ErrApiNotFound = &Errno{Code: 20201, Message: "API不存在"}
+	ErrApiNotFound = &Errno{Code: 20301, Message: "API不存在"}
 
 	// casbin errors
-	ErrUpdateCasbinRoleApi = &Errno{Code: 20301, Message: "更新角色权限失败"}
-	ErrSetCasbinUserRole   = &Errno{Code: 20302, Message: "设置用户角色失败"}
-	ErrDelRoleApi          = &Errno{Code: 20303, Message: "清空角色权限失败"}
+	ErrUpdateCasbinRoleApi = &Errno{Code: 20401, Message: "更新角色权限失败"}
+	ErrSetCasbinUserRole   = &Errno{Code: 20402, Message: "设置用户角色失败"}
 )
