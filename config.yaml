@@ -39,10 +39,3 @@ mysql:
   maxLifetime: 60
   # 数据库日志模式 silent,error,warn,info
   logMode: info
-
-# Redis配置
-redis:
-  # 连接地址
-  addr: 127.0.0.1:6379
-  # 密码,默认为空
-  password:

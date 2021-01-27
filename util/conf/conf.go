@@ -12,7 +12,6 @@ type config struct {
 	Server    server    `yaml:"server"`
 	LogConfig logConfig `yaml:"logConfig"`
 	Mysql     mysql     `yaml:"mysql"`
-	Redis     redis     `yaml:"redis"`
 }
 
 type app struct {
@@ -40,11 +39,6 @@ type mysql struct {
 	MaxOpen     int           `yaml:"maxOpen"`
 	MaxLifetime time.Duration `yaml:"maxLifetime"`
 	LogMode     string        `yaml:"logMode"`
-}
-
-type redis struct {
-	Addr     string `yaml:"addr"`
-	Password string `yaml:"password"`
 }
 
 var (
