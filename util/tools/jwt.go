@@ -32,7 +32,6 @@ func GenerateJWT(username string, minute ...int) (string, error) {
 			IssuedAt:  time.Now().Unix(), // 签发时间
 			NotBefore: time.Now().Unix(), // 生效时间
 			ExpiresAt: expireTime.Unix(), // 失效时间
-			Subject:   "go-one-server",   // 主题
 		},
 		Username: username,
 	}

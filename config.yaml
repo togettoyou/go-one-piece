@@ -40,37 +40,6 @@ mysql:
   # 数据库日志模式 silent,error,warn,info
   logMode: info
 
-casbin:
-  # 权限认证日志
-  log: true
-  # Model存储
-  model: |
-    [request_definition]
-    # 请求规则
-    r = roleKey, path, method
-
-    [policy_definition]
-    # 策略规则
-    p = roleKey, path, method, apiDec, apiID
-
-    [role_definition]
-    # 角色定义
-    g = _, _
-
-    [policy_effect]
-    # 策略生效范围
-    # 任意一条策略规则满足，则最终结果为 allow
-    e = some(where (p.eft == allow))
-
-    [matchers]
-    # 匹配器
-    # 前三个用来匹配上面定义的请求的规则，最后一个或条件为：如果roleKey是root直接通过，不验证权限
-    # queryMatch为自定义匹配器，keyMatch可以匹配*
-    m = g(r.roleKey, p.roleKey) == true \
-                && queryMatch(r.path, p.path) == true \
-                && keyMatch(r.method, p.method) == true \
-                || r.roleKey == "root"
-
 # Redis配置
 redis:
   # 连接地址

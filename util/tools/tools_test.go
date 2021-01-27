@@ -44,7 +44,7 @@ func TestFmtPlusTool(t *testing.T) {
 }
 
 func TestJWTTool(t *testing.T) {
-	token, err := GenerateJWT("user1", "123456")
+	token, err := GenerateJWT("user1", 10)
 	if err != nil {
 		t.Error(err)
 		return

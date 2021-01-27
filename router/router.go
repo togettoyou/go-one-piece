@@ -29,10 +29,6 @@ func InitRouter() *gin.Engine {
 	//api路由分组v1版本
 	apiV1 := r.Group("/api/v1")
 	initExamplesRouter(apiV1)
-	initUserRouter(apiV1)
-	initRoleRouter(apiV1)
-	initApiRouter(apiV1)
-	initCasbinRouter(apiV1)
 	return r
 }
 
@@ -46,43 +42,5 @@ func initExamplesRouter(api *gin.RouterGroup) {
 		examplesRouterGroup.POST("/json", v1.JSON)
 		examplesRouterGroup.GET("/query/array", v1.QueryArray)
 		examplesRouterGroup.GET("/query/map", v1.QueryMap)
-	}
-}
-
-func initUserRouter(api *gin.RouterGroup) {
-	userRouterGroup := api.Group("/user")
-	{
-		userRouterGroup.POST("/registered", v1.Registered)
-		userRouterGroup.POST("/login", v1.Login)
-	}
-}
-
-func initRoleRouter(api *gin.RouterGroup) {
-	roleRouterGroup := api.Group("/role")
-	roleRouterGroup.Use(middleware.JWT()).Use(middleware.CasbinRBAC())
-	{
-		roleRouterGroup.POST("", v1.AddRole)
-		roleRouterGroup.GET("", v1.GetRoleList)
-		roleRouterGroup.DELETE("/:role_key", v1.DelRole)
-	}
-}
-
-func initApiRouter(api *gin.RouterGroup) {
-	apiRouterGroup := api.Group("/api")
-	apiRouterGroup.Use(middleware.JWT()).Use(middleware.CasbinRBAC())
-	{
-		apiRouterGroup.GET("", v1.GetApiList)
-		apiRouterGroup.POST("", v1.AddApi)
-		apiRouterGroup.DELETE("/:id", v1.DelApi)
-	}
-}
-
-func initCasbinRouter(api *gin.RouterGroup) {
-	casbinRouterGroup := api.Group("/casbin")
-	casbinRouterGroup.Use(middleware.JWT()).Use(middleware.CasbinRBAC())
-	{
-		casbinRouterGroup.POST("/setUserRole", v1.SetUserRole)
-		casbinRouterGroup.GET("/api/:role_key", v1.GetCasbinApi)
-		casbinRouterGroup.PUT("/api/:role_key", v1.UpdateCasbinApi)
 	}
 }

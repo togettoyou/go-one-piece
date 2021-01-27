@@ -38,6 +38,8 @@ func level() logger.LogLevel {
 	}
 }
 
+var tablePrefix = "sys_"
+
 func Setup() {
 	var err error
 	db, err = gorm.Open(
@@ -52,8 +54,8 @@ func Setup() {
 		&gorm.Config{
 			Logger: logger.Default.LogMode(level()),
 			NamingStrategy: schema.NamingStrategy{
-				TablePrefix:   "sys_", // 表名前缀，`User` 的表名应该是 `sys_users`
-				SingularTable: true,   // 使用单数表名，启用该选项，此时，`User` 的表名应该是 `sys_user`
+				TablePrefix:   tablePrefix, // 表名前缀，`User` 的表名应该是 `sys_users`
+				SingularTable: true,        // 使用单数表名，启用该选项，此时，`User` 的表名应该是 `sys_user`
 			},
 		})
 	if err != nil {
@@ -61,7 +63,7 @@ func Setup() {
 		return
 	}
 	connectionPool()
-	autoMigrate(&User{}, &Role{}, &Api{})
+	autoMigrate()
 }
 
 func autoMigrate(tables ...interface{}) {

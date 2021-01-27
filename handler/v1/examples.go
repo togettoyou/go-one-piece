@@ -84,8 +84,8 @@ func FormData(c *gin.Context) {
 }
 
 type JSONBody struct {
-	Email    string `json:"email" binding:"required,email"`
-	Username string `json:"username" binding:"required,checkUsername"`
+	Email    string `json:"email" binding:"required,email" example:"admin@qq.com"`
+	Username string `json:"username" binding:"required,checkUsername" example:"admin"`
 }
 
 // @Tags examples

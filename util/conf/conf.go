@@ -12,7 +12,6 @@ type config struct {
 	Server    server    `yaml:"server"`
 	LogConfig logConfig `yaml:"logConfig"`
 	Mysql     mysql     `yaml:"mysql"`
-	Casbin    casbin    `yaml:"casbin"`
 	Redis     redis     `yaml:"redis"`
 }
 
@@ -41,11 +40,6 @@ type mysql struct {
 	MaxOpen     int           `yaml:"maxOpen"`
 	MaxLifetime time.Duration `yaml:"maxLifetime"`
 	LogMode     string        `yaml:"logMode"`
-}
-
-type casbin struct {
-	Log   bool   `yaml:"log"`
-	Model string `yaml:"model"`
 }
 
 type redis struct {
