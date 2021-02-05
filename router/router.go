@@ -1,7 +1,6 @@
 package router
 
 import (
-	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/pprof"
 	"github.com/gin-gonic/gin"
 	v1 "go-one-server/handler/v1"
@@ -17,7 +16,7 @@ func HasDocs() bool {
 func InitRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Recovery())
-	r.Use(cors.Default())
+	r.Use(middleware.Cors())
 	r.Use(middleware.Logger())
 	//开启性能分析
 	//实际可以根据需要使用pprof.RouteRegister()控制访问权限

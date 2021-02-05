@@ -59,7 +59,7 @@ func Setup() {
 			},
 		})
 	if err != nil {
-		zap.L().Fatal(err.Error())
+		zap.L().Error(err.Error())
 		return
 	}
 	connectionPool()
