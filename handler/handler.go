@@ -64,7 +64,8 @@ func (g *Gin) OkCustomResponse(msg string, data interface{}) {
 	})
 }
 
-// hideDetails可选择隐藏错误详细信息
+// HasError
+// hideDetails 可选择隐藏错误详细信息
 func (g *Gin) HasError(err error, hideDetails ...bool) bool {
 	if err != nil {
 		if len(hideDetails) > 0 && hideDetails[0] {
@@ -117,7 +118,8 @@ func (g *Gin) ParseFormRequest(request interface{}, hideDetails ...bool) bool {
 	return true
 }
 
-// hideDetails可选择隐藏参数校验详细信息
+// ValidatorData
+// hideDetails 可选择隐藏参数校验详细信息
 func (g *Gin) ValidatorData(err error, hideDetails bool) bool {
 	if _, ok := binding.Validator.Engine().(*validator.Validate); ok {
 		var eno error

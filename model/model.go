@@ -34,7 +34,7 @@ func level() logger.LogLevel {
 	if logLevel, ok := logMode[conf.Config.Mysql.LogMode]; ok {
 		return logLevel
 	} else {
-		return logger.Silent
+		return logger.Info
 	}
 }
 
@@ -74,7 +74,7 @@ func autoMigrate(tables ...interface{}) {
 	}
 }
 
-// 设置连接池
+// connectionPool 设置连接池
 func connectionPool() {
 	if db != nil {
 		sqlDB, err := db.DB()

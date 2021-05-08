@@ -5,6 +5,7 @@ import (
 	. "go-one-server/handler"
 )
 
+// Get
 // @Tags examples
 // @Summary Get请求
 // @Produce  json
@@ -20,6 +21,7 @@ type UriBody struct {
 	ID uint `json:"id" uri:"id" binding:"required,min=10"`
 }
 
+// Uri
 // @Tags examples
 // @Summary uri参数请求
 // @Description 路径参数，匹配 /uri/{id}
@@ -42,6 +44,7 @@ type QueryBody struct {
 	Email string `json:"email" form:"email" binding:"required,email"`
 }
 
+// Query
 // @Tags examples
 // @Summary query参数查询
 // @Description 查询参数，匹配 query?id=xxx
@@ -64,6 +67,7 @@ type FormBody struct {
 	Email string `json:"email" form:"email" binding:"required,email"`
 }
 
+// FormData
 // @Tags examples
 // @Summary form表单请求
 // @Description 处理application/x-www-form-urlencoded类型的POST请求
@@ -88,6 +92,7 @@ type JSONBody struct {
 	Username string `json:"username" binding:"required,checkUsername" example:"admin"`
 }
 
+// JSON
 // @Tags examples
 // @Summary JSON参数请求
 // @Description 邮箱、用户名校验
@@ -105,6 +110,7 @@ func JSON(c *gin.Context) {
 	g.OkWithDataResponse(body)
 }
 
+// QueryArray
 // @Tags examples
 // @Summary queryArray参数查询
 // @Description 数组参数，匹配多选业务如 array?ids=xxx&ids=xxx&ids=xxx,key一样，value不同
@@ -118,6 +124,7 @@ func QueryArray(c *gin.Context) {
 	g.OkWithDataResponse(ids)
 }
 
+// QueryMap
 // @Tags examples
 // @Summary queryMap参数查询
 // @Description map参数，字典参数，匹配 map?ids[a]=123&ids[b]=456&ids[c]=789

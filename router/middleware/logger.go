@@ -20,6 +20,7 @@ func (w respLogWriter) Write(b []byte) (int, error) {
 	w.body.Write(b)
 	return w.ResponseWriter.Write(b)
 }
+
 func (w respLogWriter) WriteString(s string) (int, error) {
 	w.body.WriteString(s)
 	return w.ResponseWriter.WriteString(s)

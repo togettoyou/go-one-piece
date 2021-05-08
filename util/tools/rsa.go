@@ -10,7 +10,7 @@ import (
 	"errors"
 )
 
-// 生成 rsa 密钥对
+// GenRsaKey 生成 rsa 密钥对
 func GenRsaKey(bits int) (pubKey string, priKey string, err error) {
 	// 生成私钥文件
 	privateKey, err := rsa.GenerateKey(rand.Reader, bits)
@@ -37,7 +37,7 @@ func GenRsaKey(bits int) (pubKey string, priKey string, err error) {
 	return
 }
 
-// 加载RSA私钥
+// LoadPrivateKeyFile 加载RSA私钥
 func LoadPrivateKeyFile(priKey string) (*rsa.PrivateKey, error) {
 	block, _ := pem.Decode([]byte(priKey))
 	if block == nil {
@@ -46,7 +46,7 @@ func LoadPrivateKeyFile(priKey string) (*rsa.PrivateKey, error) {
 	return x509.ParsePKCS1PrivateKey(block.Bytes)
 }
 
-// 加载RSA公钥
+// LoadPublicKeyFile 加载RSA公钥
 func LoadPublicKeyFile(pubKey string) (*rsa.PublicKey, error) {
 	block, _ := pem.Decode([]byte(pubKey))
 	if block == nil {
@@ -59,7 +59,7 @@ func LoadPublicKeyFile(pubKey string) (*rsa.PublicKey, error) {
 	return pubKeyInterface.(*rsa.PublicKey), nil
 }
 
-// 使用公钥加密
+// PublicEncrypt 使用公钥加密
 func PublicEncrypt(pubKey string, data string) (string, error) {
 	publicKey, err := LoadPublicKeyFile(pubKey)
 	if err != nil {
@@ -74,7 +74,7 @@ func PublicEncrypt(pubKey string, data string) (string, error) {
 	return base64.StdEncoding.EncodeToString(buffer.Bytes()), nil
 }
 
-// 使用私钥解密
+// PrivateDecrypt 使用私钥解密
 func PrivateDecrypt(priKey string, encrypted string) (string, error) {
 	privateKey, err := LoadPrivateKeyFile(priKey)
 	if err != nil {

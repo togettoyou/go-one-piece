@@ -2,7 +2,7 @@ package tools
 
 import "net"
 
-// 获取本机IP地址
+// GetCurrentIP 获取本机IP地址
 func GetCurrentIP() net.IP {
 	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {

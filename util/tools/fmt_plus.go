@@ -7,7 +7,7 @@ import (
 	"strings"
 )
 
-// 利用反射将结构体转化为map
+// StructToMap 利用反射将结构体转化为map
 func StructToMap(obj interface{}) map[string]interface{} {
 	obj1 := reflect.TypeOf(obj)
 	obj2 := reflect.ValueOf(obj)
@@ -19,12 +19,12 @@ func StructToMap(obj interface{}) map[string]interface{} {
 	return data
 }
 
-//将数组格式化为字符串
+// ArrayToString 将数组格式化为字符串
 func ArrayToString(array []interface{}) string {
 	return strings.Replace(strings.Trim(fmt.Sprint(array), "[]"), " ", ",", -1)
 }
 
-//StrToFloat64 支持指定精度
+// StrToFloat64 支持指定精度
 func StrToFloat64(str string, len int) (float64, error) {
 	lenstr := "%." + strconv.Itoa(len) + "f"
 	value, err := strconv.ParseFloat(str, 64)

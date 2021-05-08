@@ -7,7 +7,7 @@ import (
 	"path/filepath"
 )
 
-// base64转文件
+// Base64ToFile base64转文件
 // data要写入的数据
 // path保存路径
 func Base64ToFile(data, path string) error {
@@ -25,7 +25,7 @@ func Base64ToFile(data, path string) error {
 	return nil
 }
 
-// 新建文件
+// CreateFile 新建文件
 // data要写入的数据
 // path保存路径
 func CreateFile(data, path string) error {
@@ -38,7 +38,7 @@ func CreateFile(data, path string) error {
 	return nil
 }
 
-//自动根据路径创建文件夹
+// MkdirAll 自动根据路径创建文件夹
 func MkdirAll(path string) error {
 	folder, _ := filepath.Split(path)
 	if !IsExist(folder) {
@@ -50,7 +50,7 @@ func MkdirAll(path string) error {
 	return nil
 }
 
-//判断文件或目录是否已存在
+// IsExist 判断文件或目录是否已存在
 func IsExist(path string) bool {
 	_, err := os.Stat(path)
 	if err != nil {

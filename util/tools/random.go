@@ -9,8 +9,8 @@ import (
 	"time"
 )
 
-//生成UUID
-//is是否去除-符号 默认去除
+// UUID 生成UUID
+// is是否去除-符号 默认去除
 func UUID(is ...bool) string {
 	if len(is) > 0 && is[0] {
 		return fmt.Sprintf("%s", uuid.Must(uuid.NewV4(), nil))
@@ -29,7 +29,7 @@ func NewRandom() *random {
 
 var defaultLetters = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789")
 
-//生成指定长度的随机字符串
+// String 生成指定长度的随机字符串
 func (r *random) String(n int, allowedChars ...[]rune) string {
 	r.Lock.Lock()
 	defer r.Lock.Unlock()
@@ -47,7 +47,7 @@ func (r *random) String(n int, allowedChars ...[]rune) string {
 	return string(b)
 }
 
-//生成指定长度的随机数字
+// Code 生成指定长度的随机数字
 func (r *random) Code(length int) string {
 	r.Lock.Lock()
 	defer r.Lock.Unlock()
@@ -59,8 +59,8 @@ func (r *random) Code(length int) string {
 	return container
 }
 
-//生成指定范围内随机值
-//[min,max)
+// Num 生成指定范围内随机值
+// [min,max)
 func (r *random) Num(min, max int) int {
 	r.Lock.Lock()
 	defer r.Lock.Unlock()

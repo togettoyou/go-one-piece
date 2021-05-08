@@ -4,7 +4,7 @@ import (
 	"gorm.io/gorm"
 )
 
-// 分页结构体
+// PaginationQ 分页结构体
 type PaginationQ struct {
 	//每页显示的数量
 	PageSize int `json:"page_size"`
@@ -16,14 +16,14 @@ type PaginationQ struct {
 	Total int64 `json:"total"`
 }
 
-// 通用计数
+// Count 通用计数
 func Count(total *int64) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		return db.Count(total)
 	}
 }
 
-// 通用分页
+// Paginate 通用分页
 func Paginate(page, pageSize *int) func(db *gorm.DB) *gorm.DB {
 	return func(db *gorm.DB) *gorm.DB {
 		switch {

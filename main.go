@@ -33,7 +33,7 @@ var (
 
 // @title go-one-server
 // @version 1.0
-// @description 基于Gin进行快速构建RESTful API 服务的项目模板
+// @description 基于Gin进行快速构建 RESTFUL API 服务的项目模板
 // @securityDefinitions.apikey ApiKeyAuth
 // @in header
 // @name Authorization
@@ -51,6 +51,10 @@ func main() {
 	}
 	conf.DefaultConfigFile = *config
 	setup()
+	defer func() {
+		zap.L().Sync()
+		zap.S().Sync()
+	}()
 	startServer()
 	reload := make(chan int, 1)
 	conf.OnConfigChange(func() { reload <- 1 })
@@ -63,8 +67,7 @@ func main() {
 }
 
 func startServer() {
-	timeLocal := time.FixedZone("CST", 8*3600)
-	time.Local = timeLocal
+	time.Local = time.FixedZone("CST", 8*3600)
 	zap.L().Info(time.Now().Format(tools.TimeFormat))
 	gin.SetMode(conf.Config.Server.RunMode)
 	httpPort := fmt.Sprintf(":%d", conf.Config.Server.HttpPort)
@@ -81,7 +84,7 @@ func startServer() {
 		}
 	}()
 	if router.HasDocs() {
-		fmt.Printf(`swagger文档地址：http://%s%s/swagger/index.html
+		fmt.Printf(`swagger 文档地址 : http://%s%s/swagger/index.html
    ____   ____             ____   ____   ____             ______ ______________  __ ___________ 
   / ___\ /  _ \   ______  /  _ \ /    \_/ __ \   ______  /  ___// __ \_  __ \  \/ // __ \_  __ \
  / /_/  >  <_> ) /_____/ (  <_> )   |  \  ___/  /_____/  \___ \\  ___/|  | \/\   /\  ___/|  | \/

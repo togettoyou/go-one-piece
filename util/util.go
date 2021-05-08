@@ -8,7 +8,7 @@ import (
 	"go.uber.org/zap"
 )
 
-// 重设配置
+// Reset 重设配置
 func Reset() {
 	conf.Reset()
 	logger.Reset()

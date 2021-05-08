@@ -16,14 +16,18 @@ server:
 # 日志配置
 logConfig:
   # 日志记录模式 fatal,panic,dpanic,error,warn,info,debug
-  level: info
+  level: debug
   # 日志是否记录到文件 true,false
   isFile: false
-  # MaxSize 是日志文件在获取之前的最大大小（以兆字节为单位）默认为 100 MB
+  # 普通日志文件存放位置，当 isFile 为 true 时生效
+  filePath: log/log.log
+  # 错误日志文件存放位置，当 isFile 为 true 时生效
+  errFilePath: log/err.log
+  # 日志文件的最大大小（以兆字节为单位）,当 isFile 为 true 时生效
   maxSize: 100
-  # MaxAge 是保留旧日志文件的最大天数
+  # 保留旧日志文件的最大天数，当 isFile 为 true 时生效
   maxAge: 7
-  # MaxBackups 是要保留的最大旧日志文件数
+  # 保留的最大旧日志文件数，当 isFile 为 true 时生效
   maxBackups: 10
 
 # mysql配置

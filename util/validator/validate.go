@@ -31,7 +31,7 @@ func E(err error) (string, bool) {
 	return "", true
 }
 
-// 定制gin内置的validator
+// Setup 定制gin内置的validator
 func Setup() {
 	var ok bool
 	if v, ok = binding.Validator.Engine().(*validator.Validate); ok {
@@ -61,7 +61,7 @@ func Setup() {
 	}
 }
 
-// 以msg方式翻译错误消息
+// TranslateErrMsg 以msg方式翻译错误消息
 func TranslateErrMsg(errs validator.ValidationErrors) string {
 	var errList []string
 	for _, e := range errs {
@@ -70,12 +70,12 @@ func TranslateErrMsg(errs validator.ValidationErrors) string {
 	return strings.Join(errList, "|")
 }
 
-// 以data方式翻译错误消息
+// TranslateErrData 以data方式翻译错误消息
 func TranslateErrData(errs validator.ValidationErrors) map[string]string {
 	return removeTopStruct(errs.Translate(trans))
 }
 
-// 获取json标签，作为字段名称
+// registerTagNameFunc 获取json标签，作为字段名称
 func registerTagNameFunc() {
 	v.RegisterTagNameFunc(func(fld reflect.StructField) string {
 		name := strings.SplitN(fld.Tag.Get("json"), ",", 2)[0]
@@ -92,7 +92,7 @@ type validationTranslation struct {
 	msg string
 }
 
-// 注册验证方法并翻译
+// registerValidationTranslation 注册验证方法并翻译
 func registerValidationTranslation(vs []validationTranslation) {
 	for _, v := range vs {
 		registerValidation(v.tag, v.Fun)
@@ -100,14 +100,14 @@ func registerValidationTranslation(vs []validationTranslation) {
 	}
 }
 
-// 自定义验证方法
+// registerValidation 自定义验证方法
 func registerValidation(tag string, fun validator.Func) {
 	if err := v.RegisterValidation(tag, fun); err != nil {
 		zap.L().Error(err.Error())
 	}
 }
 
-// 根据自定义的标记注册翻译
+// registerTranslation 根据自定义的标记注册翻译
 func registerTranslation(tag string, registerFn validator.RegisterTranslationsFunc) {
 	if err := v.RegisterTranslation(
 		tag,
@@ -118,7 +118,7 @@ func registerTranslation(tag string, registerFn validator.RegisterTranslationsFu
 	}
 }
 
-// 为自定义字段添加翻译功能
+// registerTranslator 为自定义字段添加翻译功能
 func registerTranslator(tag string, msg string) validator.RegisterTranslationsFunc {
 	return func(trans ut.Translator) error {
 		if err := trans.Add(tag, msg, false); err != nil {
@@ -128,7 +128,7 @@ func registerTranslator(tag string, msg string) validator.RegisterTranslationsFu
 	}
 }
 
-// 自定义字段的翻译方法
+// translate 自定义字段的翻译方法
 func translate(trans ut.Translator, fe validator.FieldError) string {
 	msg, err := trans.T(fe.Tag(), fe.Field())
 	if err != nil {
@@ -137,7 +137,7 @@ func translate(trans ut.Translator, fe validator.FieldError) string {
 	return msg
 }
 
-// 去除字段名中的结构体名称标识
+// removeTopStruct 去除字段名中的结构体名称标识
 // refer from:https://github.com/go-playground/validator/issues/633#issuecomment-654382345
 func removeTopStruct(fields map[string]string) map[string]string {
 	res := map[string]string{}

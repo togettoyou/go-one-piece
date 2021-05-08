@@ -6,7 +6,6 @@ package errno
 // 最后两位01表示具体错误代码
 
 var (
-	// Common errors
 	OK                  = &Errno{Code: 0, Message: "成功"}
 	InternalServerError = &Errno{Code: 10001, Message: "服务器异常"}
 	ErrBind             = &Errno{Code: 10002, Message: "参数绑定异常"}

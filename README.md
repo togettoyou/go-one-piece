@@ -1,8 +1,8 @@
 <p align="center"><img src="https://user-images.githubusercontent.com/55381228/97401757-56c5ef80-192c-11eb-8822-67b458609093.png" width="256px"/></p>
 
 # go-one-server
-go-one-server是基于Gin进行快速构建RESTFUL API服务的项目基础模板
 
+go-one-server是基于Gin进行快速构建RESTFUL API服务的项目基础模板
 
 ## 集成
 

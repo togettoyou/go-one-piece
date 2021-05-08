@@ -26,11 +26,13 @@ type server struct {
 }
 
 type logConfig struct {
-	Level      string `yaml:"level"`
-	IsFile     bool   `yaml:"isFile"`
-	MaxSize    int    `yaml:"maxSize"`
-	MaxAge     int    `yaml:"maxAge"`
-	MaxBackups int    `yaml:"maxBackups"`
+	Level       string `yaml:"level"`
+	IsFile      bool   `yaml:"isFile"`
+	FilePath    string `yaml:"filePath"`
+	ErrFilePath string `yaml:"errFilePath"`
+	MaxSize     int    `yaml:"maxSize"`
+	MaxAge      int    `yaml:"maxAge"`
+	MaxBackups  int    `yaml:"maxBackups"`
 }
 
 type mysql struct {
@@ -48,7 +50,7 @@ var (
 
 var DefaultConfigFile string
 
-// 初始化读取配置文件
+// Setup 读取配置文件设置
 func Setup() {
 	v = viper.New()
 	v.SetConfigFile(DefaultConfigFile)
@@ -58,13 +60,13 @@ func Setup() {
 	setConfig()
 }
 
-// 配置文件热加载回调
+// OnConfigChange 配置文件热加载回调
 func OnConfigChange(run func()) {
 	v.OnConfigChange(func(in fsnotify.Event) { run() })
 	v.WatchConfig()
 }
 
-// 构造配置文件到Config结构体上
+// setConfig 构造配置文件到Config结构体上
 func setConfig() {
 	if err := v.Unmarshal(&Config); err != nil {
 		zap.L().Error(err.Error())
