@@ -2,11 +2,12 @@ package model
 
 import (
 	"go-one-server/util/conf"
+	"go-one-server/util/logger"
 	"go-one-server/util/tools"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
+	gormlogger "gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
 )
 
@@ -23,18 +24,18 @@ func DB() *gorm.DB {
 	return db
 }
 
-var logMode = map[string]logger.LogLevel{
-	"silent": logger.Silent,
-	"error":  logger.Error,
-	"warn":   logger.Warn,
-	"info":   logger.Info,
+var logMode = map[string]gormlogger.LogLevel{
+	"silent": gormlogger.Silent,
+	"error":  gormlogger.Error,
+	"warn":   gormlogger.Warn,
+	"info":   gormlogger.Info,
 }
 
-func level() logger.LogLevel {
+func level() gormlogger.LogLevel {
 	if logLevel, ok := logMode[conf.Config.Mysql.LogMode]; ok {
 		return logLevel
 	} else {
-		return logger.Info
+		return gormlogger.Info
 	}
 }
 
@@ -52,7 +53,7 @@ func Setup() {
 			SkipInitializeWithVersion: false, // 根据当前 MySQL 版本自动配置
 		}),
 		&gorm.Config{
-			Logger: logger.Default.LogMode(level()),
+			Logger: logger.New(zap.L()).LogMode(level()),
 			NamingStrategy: schema.NamingStrategy{
 				TablePrefix:   tablePrefix, // 表名前缀，`User` 的表名应该是 `sys_users`
 				SingularTable: true,        // 使用单数表名，启用该选项，此时，`User` 的表名应该是 `sys_user`
@@ -94,6 +95,6 @@ func connectionPool() {
 }
 
 func Reset() {
-	db.Config.Logger = logger.Default.LogMode(level())
+	db.Config.Logger = gormlogger.Default.LogMode(level())
 	connectionPool()
 }
