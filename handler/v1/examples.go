@@ -3,6 +3,7 @@ package v1
 import (
 	"github.com/gin-gonic/gin"
 	. "go-one-server/handler"
+	"go-one-server/util/errno"
 )
 
 // Get
@@ -14,6 +15,22 @@ import (
 // @Router /api/v1/examples/get [get]
 func Get(c *gin.Context) {
 	g := Gin{Ctx: c}
+	g.OkResponse()
+}
+
+// Err
+// @Tags examples
+// @Summary Err请求
+// @Produce  json
+// @Success 200 {object} handler.Response
+// @Failure 500 {object} handler.Response
+// @Router /api/v1/examples/err [get]
+func Err(c *gin.Context) {
+	g := Gin{Ctx: c}
+	err := errno.ErrNotLogin
+	if g.HasError(err) {
+		return
+	}
 	g.OkResponse()
 }
 

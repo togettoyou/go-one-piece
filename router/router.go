@@ -35,6 +35,7 @@ func initExamplesRouter(api *gin.RouterGroup) {
 	examplesRouterGroup := api.Group("/examples")
 	{
 		examplesRouterGroup.GET("/get", v1.Get)
+		examplesRouterGroup.GET("/err", v1.Err)
 		examplesRouterGroup.GET("/uri/:id", v1.Uri)
 		examplesRouterGroup.GET("/query", v1.Query)
 		examplesRouterGroup.POST("/form", v1.FormData)

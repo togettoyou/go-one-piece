@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"go-one-server/handler"
+	"io/ioutil"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -28,21 +29,41 @@ func (w respLogWriter) WriteString(s string) (int, error) {
 
 func Logger() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		bodyLogWriter := &respLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
-		c.Writer = bodyLogWriter
 		start := time.Now()
+		// request 请求 Body
+		buf, _ := ioutil.ReadAll(c.Request.Body)
+		// 把读过的字节流重新放到 Body
+		c.Request.Body = ioutil.NopCloser(bytes.NewBuffer(buf))
+		bodyLogWriter := &respLogWriter{body: bytes.NewBufferString(""), ResponseWriter: c.Writer}
+		// 覆盖默认的 ResponseWriter
+		c.Writer = bodyLogWriter
 		c.Next()
 		cost := time.Since(start)
 		statusCode := c.Writer.Status()
-		data := make([]zap.Field, 0)
-		data = append(data,
-			zap.Int("statusCode", statusCode),
-			zap.String("method", c.Request.Method),
-			zap.String("uri", c.Request.RequestURI),
+		data := []zap.Field{
+			// 日志类型
+			zap.String("type", "go-one-server-request-log"),
+			// 请求用户的 IP
 			zap.String("ip", c.ClientIP()),
-			zap.String("errors", c.Errors.ByType(gin.ErrorTypePrivate).String()),
+			// 请求的 RequestURI
+			zap.String("uri", c.Request.RequestURI),
+			// 请求的方法
+			zap.String("method", c.Request.Method),
+			// http状态码
+			zap.Int("statusCode", statusCode),
+			// 请求 Query 中数据
+			zap.String("requestQuery", c.Request.URL.RawQuery),
+			// 请求 Body 中数据
+			zap.String("requestBody", string(buf)),
+			// 请求花费时间
 			zap.Duration("cost", cost),
-		)
+		}
+		if gin.IsDebugging() {
+			data = append(data,
+				// Debug 模式开启所有 response 数据
+				zap.String("responseData", bodyLogWriter.body.String()),
+			)
+		}
 		var resp handler.Response
 		var result string
 		if bodyLogWriter.body.String() != "" {
@@ -52,11 +73,17 @@ func Logger() gin.HandlerFunc {
 			}
 		}
 		if statusCode > 499 {
-			zap.L().Error(result+"\n", data...)
+			zap.L().Error(result, data...)
 		} else if statusCode > 399 {
-			zap.L().Warn(result+"\n", data...)
+			zap.L().Warn(result, data...)
 		} else {
-			zap.L().Info(result+"\n", data...)
+			if resp.Code >= 20000 {
+				zap.L().Warn(result, data...)
+			} else if resp.Code >= 10000 {
+				zap.L().Error(result, data...)
+			} else {
+				zap.L().Info(result, data...)
+			}
 		}
 	}
 }

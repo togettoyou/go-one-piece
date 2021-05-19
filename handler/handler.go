@@ -35,7 +35,7 @@ func (g *Gin) SendNoDataResponse(err error) {
 func (g *Gin) OkResponse() {
 	g.Ctx.JSON(http.StatusOK, Response{
 		Code: 0,
-		Msg:  "OK",
+		Msg:  "成功",
 		Data: map[string]interface{}{},
 	})
 }
@@ -51,7 +51,7 @@ func (g *Gin) OkWithMsgResponse(msg string) {
 func (g *Gin) OkWithDataResponse(data interface{}) {
 	g.Ctx.JSON(http.StatusOK, Response{
 		Code: 0,
-		Msg:  "OK",
+		Msg:  "成功",
 		Data: data,
 	})
 }
@@ -70,18 +70,6 @@ func (g *Gin) HasError(err error, hideDetails ...bool) bool {
 	if err != nil {
 		if len(hideDetails) > 0 && hideDetails[0] {
 			g.SendNoDataResponse(errno.ErrUnknown)
-			return true
-		}
-		g.SendNoDataResponse(err)
-		return true
-	}
-	return false
-}
-
-func (g *Gin) HasSqlError(err error, hideDetails ...bool) bool {
-	if err != nil {
-		if len(hideDetails) > 0 && hideDetails[0] {
-			g.SendNoDataResponse(errno.ErrSQLUnknown)
 			return true
 		}
 		g.SendNoDataResponse(err)
