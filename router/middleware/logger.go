@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"go-one-server/handler"
 	"io/ioutil"
+	"strings"
 	"time"
 
 	"github.com/gin-gonic/gin"
@@ -40,13 +41,14 @@ func Logger() gin.HandlerFunc {
 		c.Next()
 		cost := time.Since(start)
 		statusCode := c.Writer.Status()
+		uri := c.Request.RequestURI
 		data := []zap.Field{
 			// 日志类型
 			zap.String("type", "go-one-server-request-log"),
 			// 请求用户的 IP
 			zap.String("ip", c.ClientIP()),
 			// 请求的 RequestURI
-			zap.String("uri", c.Request.RequestURI),
+			zap.String("uri", uri),
 			// 请求的方法
 			zap.String("method", c.Request.Method),
 			// http状态码
@@ -58,7 +60,7 @@ func Logger() gin.HandlerFunc {
 			// 请求花费时间
 			zap.Duration("cost", cost),
 		}
-		if gin.IsDebugging() {
+		if gin.IsDebugging() && !strings.HasPrefix(uri, "/swagger/") {
 			data = append(data,
 				// Debug 模式开启所有 response 数据
 				zap.String("responseData", bodyLogWriter.body.String()),
