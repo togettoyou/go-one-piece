@@ -95,6 +95,6 @@ func connectionPool() {
 }
 
 func Reset() {
-	db.Config.Logger = gormlogger.Default.LogMode(level())
+	db.Config.Logger = logger.New(zap.L()).LogMode(level())
 	connectionPool()
 }
