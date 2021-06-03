@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"go.uber.org/zap"
+	"gorm.io/gorm"
 	gormlogger "gorm.io/gorm/logger"
 	"time"
 )
@@ -47,19 +48,24 @@ func (gl GormLogger) Error(ctx context.Context, msg string, data ...interface{})
 }
 
 func (gl GormLogger) Trace(ctx context.Context, begin time.Time, fc func() (string, int64), err error) {
+	msg := "[Gorm Trace]"
 	if gl.LogLevel > gormlogger.Silent {
 		elapsed := time.Since(begin)
 		switch {
 		case err != nil && gl.LogLevel >= gormlogger.Error:
 			sql, rows := fc()
-			gl.ZapLogger.Error("trace", zap.Error(err), zap.Duration("elapsed", elapsed), zap.Int64("rows", rows), zap.String("sql", sql))
+			if err == gorm.ErrRecordNotFound {
+				gl.ZapLogger.Warn(msg, zap.Error(err), zap.Duration("elapsed", elapsed), zap.Int64("rows", rows), zap.String("sql", sql))
+			} else {
+				gl.ZapLogger.Error(msg, zap.Error(err), zap.Duration("elapsed", elapsed), zap.Int64("rows", rows), zap.String("sql", sql))
+			}
 		case elapsed > gl.SlowThreshold && gl.SlowThreshold != 0 && gl.LogLevel >= gormlogger.Warn:
 			sql, rows := fc()
 			slowLog := fmt.Sprintf("SLOW SQL >= %v", gl.SlowThreshold)
-			gl.ZapLogger.Warn("trace", zap.String("tips", slowLog), zap.Duration("elapsed", elapsed), zap.Int64("rows", rows), zap.String("sql", sql))
+			gl.ZapLogger.Warn(msg, zap.String("tips", slowLog), zap.Duration("elapsed", elapsed), zap.Int64("rows", rows), zap.String("sql", sql))
 		case gl.LogLevel == gormlogger.Info:
 			sql, rows := fc()
-			gl.ZapLogger.Debug("trace", zap.Duration("elapsed", elapsed), zap.Int64("rows", rows), zap.String("sql", sql))
+			gl.ZapLogger.Debug(msg, zap.Duration("elapsed", elapsed), zap.Int64("rows", rows), zap.String("sql", sql))
 		}
 	}
 }
