@@ -53,16 +53,17 @@ func Logger() gin.HandlerFunc {
 			zap.String("method", c.Request.Method),
 			// http状态码
 			zap.Int("statusCode", statusCode),
-			// 请求 Query 中数据
-			zap.String("requestQuery", c.Request.URL.RawQuery),
-			// 请求 Body 中数据
-			zap.String("requestBody", string(buf)),
 			// 请求花费时间
 			zap.Duration("cost", cost),
 		}
 		if gin.IsDebugging() && !strings.HasPrefix(uri, "/swagger/") {
+			// Debug 模式开启
 			data = append(data,
-				// Debug 模式开启所有 response 数据
+				// 请求 Query 中数据
+				zap.String("requestQuery", c.Request.URL.RawQuery),
+				// 请求 Body 中数据
+				zap.String("requestBody", string(buf)),
+				// response 数据
 				zap.String("responseData", bodyLogWriter.body.String()),
 			)
 		}
