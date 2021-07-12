@@ -1,9 +1,9 @@
 package model
 
 import (
+	"github.com/togettoyou/gtools"
 	"go-one-server/util/conf"
 	"go-one-server/util/logger"
-	"go-one-server/util/tools"
 	"go.uber.org/zap"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -12,10 +12,10 @@ import (
 )
 
 type Model struct {
-	ID        uint             `json:"id" gorm:"primarykey"`
-	CreatedAt tools.FormatTime `json:"created_at"`
-	UpdatedAt tools.FormatTime `json:"-"`
-	DeletedAt gorm.DeletedAt   `json:"-" gorm:"index"`
+	ID        uint              `json:"id" gorm:"primarykey"`
+	CreatedAt gtools.FormatTime `json:"created_at"`
+	UpdatedAt gtools.FormatTime `json:"-"`
+	DeletedAt gorm.DeletedAt    `json:"-" gorm:"index"`
 }
 
 var db *gorm.DB

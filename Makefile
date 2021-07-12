@@ -1,4 +1,3 @@
-# 定义伪目标。不创建目标文件，而是去执行这个目标下面的命令。
 .PHONY: all docs linux linux-docs run gotool clean help
 
 # 生成的二进制文件名

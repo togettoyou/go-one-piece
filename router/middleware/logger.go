@@ -44,7 +44,7 @@ func Logger() gin.HandlerFunc {
 		uri := c.Request.RequestURI
 		data := []zap.Field{
 			// 日志类型
-			zap.String("type", "go-one-server-request-log"),
+			zap.String("type", "request-log"),
 			// 请求用户的 IP
 			zap.String("ip", c.ClientIP()),
 			// 请求的 RequestURI

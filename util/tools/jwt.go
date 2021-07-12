@@ -16,7 +16,7 @@ var jwtSecret = func() string {
 type Claims struct {
 	jwt.StandardClaims
 	Username string
-	// 更多自行拓展
+	// 更多自行拓展修改
 }
 
 func GenerateJWT(username string, minute ...int) (string, error) {

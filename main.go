@@ -5,12 +5,12 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/pflag"
+	"github.com/togettoyou/gtools"
 	"go-one-server/model"
 	"go-one-server/router"
 	"go-one-server/util"
 	"go-one-server/util/conf"
 	"go-one-server/util/logger"
-	"go-one-server/util/tools"
 	"go-one-server/util/validator"
 	"go-one-server/util/version"
 	"go.uber.org/zap"
@@ -68,7 +68,7 @@ func main() {
 
 func startServer() {
 	time.Local = time.FixedZone("CST", 8*3600)
-	zap.L().Info(time.Now().Format(tools.TimeFormat))
+	zap.L().Info(time.Now().Format(gtools.TimeFormat))
 	gin.SetMode(conf.Config.Server.RunMode)
 	httpPort := fmt.Sprintf(":%d", conf.Config.Server.HttpPort)
 	server := &http.Server{
@@ -91,6 +91,6 @@ func startServer() {
  \___  / \____/           \____/|___|  /\___  >         /____  >\___  >__|    \_/  \___  >__|   
 /_____/                              \/     \/               \/     \/                 \/       
 
-`, tools.GetCurrentIP().String(), httpPort)
+`, gtools.GetCurrentIP().String(), httpPort)
 	}
 }
