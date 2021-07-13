@@ -2,6 +2,7 @@ package main
 
 import (
 	"github.com/togettoyou/go-one-server/cmd/gos/internal/swag"
+	"github.com/togettoyou/go-one-server/cmd/gos/internal/upgrade"
 	"log"
 
 	"github.com/spf13/cobra"
@@ -10,7 +11,7 @@ import (
 )
 
 var (
-	version = "v1.0.1"
+	version = "v1.0.2"
 
 	rootCmd = &cobra.Command{
 		Use:     "gos",
@@ -24,6 +25,7 @@ func init() {
 	rootCmd.AddCommand(project.CmdNew)
 	rootCmd.AddCommand(run.CmdRun)
 	rootCmd.AddCommand(swag.CmdSwag)
+	rootCmd.AddCommand(upgrade.CmdUpgrade)
 }
 
 func main() {
