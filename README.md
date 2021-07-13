@@ -22,6 +22,13 @@ gos run
 
 # 生成 swag 文档
 gos swag
+
+# 使用镜像代理
+export GOS_LAYOUT_REPO=https://github.com.cnpmjs.org/togettoyou/go-one-server.git
+gos new helloworld
+
+# 更多帮助
+gos -h
 ```
 
 ## 集成
