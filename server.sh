@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 启动服务名
-SERVER_NAME="go-one-server"
+SERVER_NAME="server"
 BASE_DIR=$PWD
 INTERVAL=2
 

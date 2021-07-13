@@ -36,7 +36,7 @@ func (p *Project) New(ctx context.Context, dir string, layout string, branch str
 	}
 	fmt.Printf("🚀 Creating service %s, layout repo is %s, please wait a moment.\n\n", p.Name, layout)
 	repo := base.NewRepo(layout, branch)
-	if err := repo.CopyTo(ctx, to, p.Name, []string{".git", ".github", "cmd", "LICENSE"}); err != nil {
+	if err := repo.CopyTo(ctx, to, p.Name, []string{".git", ".github", "cmd", "LICENSE", "README.md"}); err != nil {
 		return err
 	}
 	os.Rename(
