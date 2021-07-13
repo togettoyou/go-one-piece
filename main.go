@@ -31,7 +31,7 @@ var (
 	config = pflag.StringP("config", "c", "config.yaml", "指定配置文件路径")
 )
 
-// @title go-one-server
+// @title go-server
 // @version 1.0
 // @description 基于Gin进行快速构建 RESTFUL API 服务的项目模板
 // @securityDefinitions.apikey ApiKeyAuth

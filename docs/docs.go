@@ -19,6 +19,7 @@ var doc = `{
         "description": "{{.Description}}",
         "title": "{{.Title}}",
         "contact": {},
+        "license": {},
         "version": "{{.Version}}"
     },
     "host": "{{.Host}}",
@@ -328,7 +329,7 @@ var SwaggerInfo = swaggerInfo{
 	Host:        "",
 	BasePath:    "",
 	Schemes:     []string{},
-	Title:       "go-one-server",
+	Title:       "go-server",
 	Description: "基于Gin进行快速构建 RESTFUL API 服务的项目模板",
 }
 

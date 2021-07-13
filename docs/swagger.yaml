@@ -23,7 +23,8 @@ definitions:
 info:
   contact: {}
   description: 基于Gin进行快速构建 RESTFUL API 服务的项目模板
-  title: go-one-server
+  license: {}
+  title: go-server
   version: "1.0"
 paths:
   /api/v1/examples/err:
