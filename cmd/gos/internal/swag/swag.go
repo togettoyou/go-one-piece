@@ -20,7 +20,7 @@ var CmdSwag = &cobra.Command{
 func Swag(cmd *cobra.Command, args []string) {
 	_, err := exec.LookPath("swag")
 	if err != nil {
-		err := base.GoGet("github.com/swaggo/swag/cmd/swag")
+		err := base.GoGet("github.com/swaggo/swag/cmd/swag@v1.6.7")
 		if err != nil {
 			fmt.Fprintf(os.Stderr, "\033[31mERROR: %s\033[m\n", err.Error())
 			return
