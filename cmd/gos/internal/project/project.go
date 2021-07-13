@@ -19,7 +19,7 @@ var CmdNew = &cobra.Command{
 }
 
 var repoURL string
-var branch = "template"
+var branch string
 
 func init() {
 	if repoURL = os.Getenv("GOS_LAYOUT_REPO"); repoURL == "" {

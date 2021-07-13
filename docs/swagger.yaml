@@ -1,0 +1,194 @@
+definitions:
+  handler.Response:
+    properties:
+      code:
+        type: integer
+      data:
+        type: object
+      msg:
+        type: string
+    type: object
+  v1.JSONBody:
+    properties:
+      email:
+        example: admin@qq.com
+        type: string
+      username:
+        example: admin
+        type: string
+    required:
+    - email
+    - username
+    type: object
+info:
+  contact: {}
+  description: 基于Gin进行快速构建 RESTFUL API 服务的项目模板
+  title: go-one-server
+  version: "1.0"
+paths:
+  /api/v1/examples/err:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Err请求
+      tags:
+      - examples
+  /api/v1/examples/form:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: 处理application/x-www-form-urlencoded类型的POST请求
+      parameters:
+      - description: 邮箱
+        in: formData
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: form表单请求
+      tags:
+      - examples
+  /api/v1/examples/get:
+    get:
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: Get请求
+      tags:
+      - examples
+  /api/v1/examples/json:
+    post:
+      description: 邮箱、用户名校验
+      parameters:
+      - description: 测试请求json参数
+        in: body
+        name: data
+        required: true
+        schema:
+          $ref: '#/definitions/v1.JSONBody'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: JSON参数请求
+      tags:
+      - examples
+  /api/v1/examples/query:
+    get:
+      description: 查询参数，匹配 query?id=xxx
+      parameters:
+      - description: 邮箱
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: query参数查询
+      tags:
+      - examples
+  /api/v1/examples/query/array:
+    get:
+      description: 数组参数，匹配多选业务如 array?ids=xxx&ids=xxx&ids=xxx,key一样，value不同
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: queryArray参数查询
+      tags:
+      - examples
+  /api/v1/examples/query/map:
+    get:
+      description: map参数，字典参数，匹配 map?ids[a]=123&ids[b]=456&ids[c]=789
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: queryMap参数查询
+      tags:
+      - examples
+  /api/v1/examples/uri/{id}:
+    get:
+      description: 路径参数，匹配 /uri/{id}
+      parameters:
+      - description: id值
+        in: path
+        name: id
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/handler.Response'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/handler.Response'
+      summary: uri参数请求
+      tags:
+      - examples
+securityDefinitions:
+  ApiKeyAuth:
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
