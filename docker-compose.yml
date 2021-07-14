@@ -6,4 +6,5 @@ services:
     ports:
       - "8888:8888"
     volumes:
-      - conf:/root/togettoyou/conf
+      - $PWD/conf:/root/togettoyou/conf
+      - $PWD/log:/root/togettoyou/log
