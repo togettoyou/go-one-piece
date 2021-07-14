@@ -11,7 +11,7 @@ import (
 )
 
 var (
-	version = "v1.1.1"
+	version = "v1.2.0"
 
 	rootCmd = &cobra.Command{
 		Use:     "gos",
