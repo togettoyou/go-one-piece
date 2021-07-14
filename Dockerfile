@@ -6,8 +6,8 @@ WORKDIR /root/togettoyou/
 RUN make docs
 
 FROM scratch
-COPY --from=builder /root/togettoyou/server /root/togettoyou/
+COPY --from=builder /root/togettoyou/gos-server /root/togettoyou/
 COPY --from=builder /root/togettoyou/conf/ /root/togettoyou/conf/
 WORKDIR /root/togettoyou/
 EXPOSE 8888
-ENTRYPOINT ["./server"]
+ENTRYPOINT ["./gos-server"]

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 启动服务名
-SERVER_NAME="server"
+SERVER_NAME="gos-server"
 BASE_DIR=$PWD
 INTERVAL=2
 
